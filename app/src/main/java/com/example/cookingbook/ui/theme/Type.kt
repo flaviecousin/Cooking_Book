@@ -46,22 +46,22 @@ val Typography = Typography(
     // Display2XL
     displayLarge = TextStyle(
         fontFamily = PlayfairDisplay,
-        fontWeight = FontWeight.W600,
-        fontSize = 28.sp,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 32.sp,
         lineHeight = 34.sp
     ),
     // DisplayLG : titre recette (détails) + "Ajouter une recette"
     displayMedium = TextStyle(
         fontFamily = PlayfairDisplay,
         fontWeight = FontWeight.W600,
-        fontSize = 22.sp,
+        fontSize = 18.sp,
         lineHeight = 28.sp
     ),
     //h3 : titre de carte dans la grille
     titleLarge = TextStyle(
         fontFamily = PlayfairDisplay,
         fontWeight = FontWeight.W600,
-        fontSize = 28.sp,
+        fontSize = 18.sp,
         lineHeight = 24.sp
     ),
     // label
@@ -76,6 +76,14 @@ val Typography = Typography(
     ),
     // body : texte des ingrédients, valeurs des champs
     bodyLarge = TextStyle(
+        fontFamily = DSETypewriter,
+        fontSynthesis = FontSynthesis.Weight,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+    ),
+    // body : texte des ingrédients, valeurs des champs
+    bodySmall = TextStyle(
         fontFamily = DSETypewriter,
         fontSynthesis = FontSynthesis.Weight,
         fontWeight = FontWeight.Normal,
@@ -100,20 +108,4 @@ val Typography = Typography(
         lineHeight = 16.sp,
         color = GreyPink
     )
-        /* Other default text styles to override
-        titleLarge = TextStyle(
-            fontFamily = FontFamily.Default,
-            fontWeight = FontWeight.Normal,
-            fontSize = 22.sp,
-            lineHeight = 28.sp,
-            letterSpacing = 0.sp
-        ),
-        labelSmall = TextStyle(
-            fontFamily = FontFamily.Default,
-            fontWeight = FontWeight.Medium,
-            fontSize = 11.sp,
-            lineHeight = 16.sp,
-            letterSpacing = 0.5.sp
-        )
-        */
 )

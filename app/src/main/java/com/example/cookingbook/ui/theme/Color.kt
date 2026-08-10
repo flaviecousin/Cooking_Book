@@ -1,7 +1,6 @@
 package com.example.cookingbook.ui.theme
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.colorspace.ColorSpace
 import androidx.compose.ui.graphics.colorspace.ColorSpaces
 
 // Colors of the theme
