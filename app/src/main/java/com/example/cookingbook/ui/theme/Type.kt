@@ -1,12 +1,14 @@
 package com.example.cookingbook.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontSynthesis
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.sp
 import com.example.cookingbook.R
 
@@ -48,6 +50,13 @@ val Typography = Typography(
         fontWeight = FontWeight.SemiBold,
         fontSize = 32.sp,
         lineHeight = 34.sp
+    ),
+    // Display2XL Version 2
+    displaySmall = TextStyle(
+        fontFamily = PlayfairDisplay,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 32.sp,
+        lineHeight = 90.sp
     ),
     // DisplayLG : titre recette (détails) + "Ajouter une recette"
     displayMedium = TextStyle(
