@@ -99,7 +99,7 @@ fun Title(modifier: Modifier = Modifier) {
 @Composable
 fun CategoryList(){
     var categorySelected by remember{ mutableStateOf("Tout") }
-    val categories = listOf("Tout", "Entrées", "Plats", "Desserts", "Pains", "Boissons", "A tester","Pas cher et facile")
+    val categories = listOf("Tout", "Entrées", "Plats", "Desserts", "Pains", "Boissons", "A tester","Pas chères et faciles")
     Row(modifier = Modifier.horizontalScroll(rememberScrollState()))
     {
         categories.forEach { categorie ->

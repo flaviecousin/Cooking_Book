@@ -1,36 +1,23 @@
 package com.example.cookingbook.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.cookingbook.ui.components.IngredientsButton
-import com.example.cookingbook.ui.components.IngredientsFilterWindow
-import com.example.cookingbook.ui.components.SearchBar
+import com.example.cookingbook.ui.components.InputTexte
 import com.example.cookingbook.ui.theme.Spacing
+import com.example.cookingbook.ui.components.InputCategories
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,19 +34,31 @@ fun AddScreen(){
             )
         }
     ) { innerPadding ->
-        Column (modifier = Modifier.padding(innerPadding)){
-            Spacer(Modifier.height(Spacing.lg))
+        Column(modifier = Modifier.padding(innerPadding)) {
+            Spacer(Modifier.height(Spacing.sm))
             HorizontalDivider(
                 thickness = 1.dp,
                 color = MaterialTheme.colorScheme.surface
             )
+            Column (modifier = Modifier.padding(horizontal = Spacing.xl)){
+                Spacer(Modifier.height(Spacing.lg))
+                // Rectangle pour récupérer la photo à partir de la galerie et/ou de l'appareil photo
+                Text("Bloc photo")
+                Spacer(Modifier.height(Spacing.lg))
+                InputTexte("Titre","Ex : Tarte Tatin")
+                InputCategories()
+                // ESpace nombre de personnes
+                // Espace temps
+                // Espace Ingrédients
+                // Espace Préparation
+                InputTexte("Conseils & Avis","Notes personnelles, astuces, idées d'accompagnement...")
+            }
         }
     }
 }
 
 @Composable
 fun TitleScreen(modifier: Modifier = Modifier) {
-    var showIngredientsFilter by remember { mutableStateOf(false)}
     Column {
         Text(
             text = "Nouveau".uppercase(),

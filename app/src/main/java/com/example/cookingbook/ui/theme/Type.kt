@@ -76,10 +76,10 @@ val Typography = Typography(
     labelLarge = TextStyle(
         fontFamily = DSETypewriter,
         fontSynthesis = FontSynthesis.Weight,
-        fontWeight = FontWeight.W600,
-        fontSize = 13.sp,
+        fontWeight = FontWeight.W900,
+        fontSize = 15.sp,
         lineHeight = 18.sp,
-        letterSpacing = 0.4.sp
+        letterSpacing = 0.6.sp
         // uppercase
     ),
     // body : texte des ingrédients, valeurs des champs
