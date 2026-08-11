@@ -1,7 +1,6 @@
 package com.example.cookingbook.ui.theme
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.colorspace.ColorSpace
 import androidx.compose.ui.graphics.colorspace.ColorSpaces
 
 // Colors of the theme
@@ -13,7 +12,8 @@ val DarkPurple = Color(0xFF4A2E4B) // chips (fond actif), accents secondaires
 
 val GreyCream = Color(0xFFF4EFEA) // fonds des inputs, search bar
 
-val BrownCream = Color(0xFFE8DFD8) // bordures, dividers, fonds des pills d'infos (préparation, cuisson, repos)
+//val BrownCream = Color(0xFFE8DFD8)
+ val BrownCream = Color(0xFFF1ECE8) // bordures, dividers, fonds des pills d'infos (préparation, cuisson, repos)
 
 val GreyPink = Color(0xFF8A7A80) // texte secondaire (placeholder, sous-titres)
 
