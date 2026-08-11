@@ -25,6 +25,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import com.example.cookingbook.ui.components.ChipCategory
+import com.example.cookingbook.ui.components.IngredientsButton
+import com.example.cookingbook.ui.components.IngredientsFilterWindow
 import com.example.cookingbook.ui.components.SearchBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,11 +34,12 @@ import com.example.cookingbook.ui.components.SearchBar
 fun RecipeGridScreen(){
     val focusManager = LocalFocusManager.current
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
-            ){
+            ) {
                 focusManager.clearFocus()
             },
         topBar = {
@@ -57,6 +60,7 @@ fun RecipeGridScreen(){
 
 @Composable
 fun Title(modifier: Modifier = Modifier) {
+    var showIngredientsFilter by remember { mutableStateOf(false)}
     Column {
         Text(
             text = "Mon Carnet de".uppercase(),
@@ -76,9 +80,11 @@ fun Title(modifier: Modifier = Modifier) {
                 style= MaterialTheme.typography.displayLarge,
                 color = MaterialTheme.colorScheme.onBackground
             )
-            Text(
-                text = "Filtre Ingrédients",
-                modifier = modifier
+            IngredientsButton(onClick={showIngredientsFilter=true})
+        }
+        if (showIngredientsFilter){
+            IngredientsFilterWindow(
+                onDismiss = { showIngredientsFilter = false }
             )
         }
     }
