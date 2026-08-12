@@ -9,5 +9,5 @@ object Spacing {
     val lg = 16.dp // pour le padding horizontal des écrans + gap vertical entre les sections
     val xl = 22.dp // pour les marges autour des blocs principaux
     val xxl = 32.dp
-    val xxxl = 48.dp
+    val xxxl = 100.dp
 }
