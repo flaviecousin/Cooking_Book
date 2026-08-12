@@ -67,6 +67,5 @@ fun OrganisationTime(texte : String){
             ),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
-        Spacer(Modifier.height(Spacing.xs))
     }
 }
