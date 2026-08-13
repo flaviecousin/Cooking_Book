@@ -35,7 +35,7 @@ fun InputTimes(){
             OrganisationTime("Cuisson")
             OrganisationTime("Repos")
         }
-        Spacer(Modifier.height(Spacing.lg))
+        Spacer(Modifier.height(Spacing.sm))
     }
 }
 
