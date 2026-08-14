@@ -115,5 +115,14 @@ val Typography = Typography(
         fontSize = 12.sp,
         lineHeight = 16.sp,
         color = GreyPink
+    ),
+    // caption : métadonnées cartes (temps, personne)
+    labelSmall = TextStyle(
+        fontFamily = DSETypewriter,
+        fontSynthesis = FontSynthesis.Weight,
+        fontWeight = FontWeight.Bold,
+        fontSize = 13.sp,
+        lineHeight = 16.sp,
+        color = RaspberryPink
     )
 )

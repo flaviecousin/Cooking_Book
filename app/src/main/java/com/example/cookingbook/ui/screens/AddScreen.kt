@@ -28,6 +28,8 @@ import com.example.cookingbook.ui.components.InputTimes
 import com.example.cookingbook.ui.components.SavingButton
 import com.example.cookingbook.ui.theme.Spacing
 import com.example.cookingbook.ui.components.NumberPeopleInput
+import com.example.cookingbook.ui.components.AddButton
+import com.example.cookingbook.ui.components.AddIngredients
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,10 +77,10 @@ fun AddScreen(){
                 Spacer(Modifier.height(Spacing.lg))
                 InputTexte("Titre","Ex : Tarte Tatin")
                 InputCategories()
-                // ESpace nombre de personnes
                 NumberPeopleInput()
                 InputTimes()
                 // Espace Ingrédients
+                AddIngredients()
                 // Espace Préparation
                 InputTexte("Conseils & Avis","Notes personnelles, astuces, idées d'accompagnement...")
             }
