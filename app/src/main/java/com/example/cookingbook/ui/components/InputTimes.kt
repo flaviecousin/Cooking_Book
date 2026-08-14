@@ -51,7 +51,7 @@ fun OrganisationTime(texte : String){
         Spacer(Modifier.height(Spacing.sm))
         OutlinedTextField(
             value=text,
-            onValueChange = {it -> text=it },
+            onValueChange = {text=it },
             modifier = Modifier.width(Spacing.xxxl),
             shape = RoundedCornerShape(Radius.md),
             placeholder = {

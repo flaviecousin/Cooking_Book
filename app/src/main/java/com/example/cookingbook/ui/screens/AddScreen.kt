@@ -22,14 +22,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.cookingbook.ui.components.AddIngredients
+import com.example.cookingbook.ui.components.AddSteps
 import com.example.cookingbook.ui.components.InputCategories
 import com.example.cookingbook.ui.components.InputTexte
 import com.example.cookingbook.ui.components.InputTimes
+import com.example.cookingbook.ui.components.NumberPeopleInput
 import com.example.cookingbook.ui.components.SavingButton
 import com.example.cookingbook.ui.theme.Spacing
-import com.example.cookingbook.ui.components.NumberPeopleInput
-import com.example.cookingbook.ui.components.AddButton
-import com.example.cookingbook.ui.components.AddIngredients
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,9 +79,9 @@ fun AddScreen(){
                 InputCategories()
                 NumberPeopleInput()
                 InputTimes()
-                // Espace Ingrédients
                 AddIngredients()
                 // Espace Préparation
+                AddSteps()
                 InputTexte("Conseils & Avis","Notes personnelles, astuces, idées d'accompagnement...")
             }
         }
