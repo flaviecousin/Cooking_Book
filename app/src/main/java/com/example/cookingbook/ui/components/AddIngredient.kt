@@ -30,6 +30,8 @@ import com.example.cookingbook.ui.icons.HeroiconsPlus
 import com.example.cookingbook.ui.icons.VscodeCodiconsError
 import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.Spacing
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableIntStateOf
 
 @Composable
 fun AddButton (onClick : () -> Unit){
@@ -96,7 +98,8 @@ fun WidgetIngredient(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Un
 }
 @Composable
 fun AddIngredients(){
-    var ingredientNumber by remember { mutableStateOf(listOf(1)) }
+    var nextId by remember { mutableIntStateOf(1) }
+    var ingredientsId by remember { mutableStateOf(listOf(0)) }
 
     Column{
         Row(
@@ -111,15 +114,20 @@ fun AddIngredients(){
                 color = MaterialTheme.colorScheme.onBackground
             )
             AddButton(onClick = {
-                ingredientNumber = ingredientNumber + (ingredientNumber.size+1)
+                ingredientsId = ingredientsId + nextId
+                nextId++
             })
         }
-        ingredientNumber.forEachIndexed { index, labelNumber ->
-            WidgetIngredient(
-                labelNumber = index + 1,
-                buttonShown = ingredientNumber.size > 1,
-                onDelete = { ingredientNumber = ingredientNumber.filterIndexed { i, _ -> i != index }}
-            )
+        ingredientsId.forEachIndexed { index, id ->
+            key(id){
+                WidgetIngredient(
+                    labelNumber = index + 1,
+                    buttonShown = ingredientsId.size > 1,
+                    onDelete = {
+                        ingredientsId = ingredientsId.filter { it != id }
+                    }
+                )
+            }
         }
         Spacer(Modifier.height(Spacing.sm))
     }
