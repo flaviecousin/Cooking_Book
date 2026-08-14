@@ -29,6 +29,7 @@ import com.example.cookingbook.ui.components.InputTexte
 import com.example.cookingbook.ui.components.InputTimes
 import com.example.cookingbook.ui.components.NumberPeopleInput
 import com.example.cookingbook.ui.components.SavingButton
+import com.example.cookingbook.ui.components.WidgetImg
 import com.example.cookingbook.ui.theme.Spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,15 +73,13 @@ fun AddScreen(){
             )
             Column (modifier = Modifier.padding(horizontal = Spacing.xl)){
                 Spacer(Modifier.height(Spacing.lg))
-                // Rectangle pour récupérer la photo à partir de la galerie et/ou de l'appareil photo
-                Text("Bloc photo")
+                WidgetImg ()
                 Spacer(Modifier.height(Spacing.lg))
                 InputTexte("Titre","Ex : Tarte Tatin")
                 InputCategories()
                 NumberPeopleInput()
                 InputTimes()
                 AddIngredients()
-                // Espace Préparation
                 AddSteps()
                 InputTexte("Conseils & Avis","Notes personnelles, astuces, idées d'accompagnement...")
             }
