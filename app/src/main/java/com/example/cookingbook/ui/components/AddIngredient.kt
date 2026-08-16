@@ -61,12 +61,30 @@ fun AddButton (onClick : () -> Unit){
 @Composable
 fun WidgetIngredient(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Unit){
     var text by rememberSaveable{ mutableStateOf("") }
+    var texte_val by rememberSaveable{ mutableStateOf("") }
 
     Column {
         Spacer(Modifier.height(Spacing.sm))
         Row(modifier = Modifier.fillMaxWidth(),verticalAlignment = Alignment.CenterVertically) {
             Icon(imageVector = BootstrapDot, contentDescription = "Icone point", tint = MaterialTheme.colorScheme.primary)
             Spacer(Modifier.width(Spacing.md))
+            OutlinedTextField(
+                value=texte_val,
+                onValueChange = { texte_val=it },
+                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(Radius.md),
+                placeholder = {
+                    Text(text = "Quantité n° $labelNumber",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    disabledContainerColor = MaterialTheme.colorScheme.surface
+                )
+            )
             OutlinedTextField(
                 value=text,
                 onValueChange = { text=it },
