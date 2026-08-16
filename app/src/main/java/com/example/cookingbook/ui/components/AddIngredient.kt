@@ -61,7 +61,7 @@ fun AddButton (onClick : () -> Unit){
 @Composable
 fun WidgetIngredient(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Unit){
     var text by rememberSaveable{ mutableStateOf("") }
-    var texte_val by rememberSaveable{ mutableStateOf("") }
+    var texteVal by rememberSaveable{ mutableStateOf("") }
 
     Column {
         Spacer(Modifier.height(Spacing.sm))
@@ -69,8 +69,8 @@ fun WidgetIngredient(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Un
             Icon(imageVector = BootstrapDot, contentDescription = "Icone point", tint = MaterialTheme.colorScheme.primary)
             Spacer(Modifier.width(Spacing.md))
             OutlinedTextField(
-                value=texte_val,
-                onValueChange = { texte_val=it },
+                value=texteVal,
+                onValueChange = { texteVal=it },
                 modifier = Modifier.weight(1f),
                 shape = RoundedCornerShape(Radius.md),
                 placeholder = {
