@@ -29,16 +29,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.cookingbook.ui.data.copyImgToInternalStorage
 import com.example.cookingbook.ui.icons.FeatherCamera
 import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.Spacing
 
 @Composable
-fun WidgetImg(){
-    var photoUri: Uri? by remember { mutableStateOf((null)) }
+fun WidgetImg(value: String, onValueChange: (String) -> Unit){
+    val context = LocalContext.current
+    val displayUri: Uri? = if (value.isNotEmpty()) Uri.parse(value) else null
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        // Quand le user a sélectionné une photo, son URI est retourné ici
-        photoUri = uri
+        if (uri != null){
+            val savedPath = copyImgToInternalStorage(context, uri)
+            if (savedPath != null){
+                onValueChange(savedPath)
+            }
+        }
     }
     Box(contentAlignment = Alignment.Center){
         Button(
@@ -51,12 +57,12 @@ fun WidgetImg(){
             shape = RoundedCornerShape(Radius.sm),
             modifier = Modifier.height((Spacing.xxxl)+80.dp).fillMaxWidth()
         ) {
-            if (photoUri != null){
+            if (displayUri != null){
                 // Utilisation de Coil pour afficher l'image sélectionner
                 val painter = rememberAsyncImagePainter(
                     ImageRequest
-                        .Builder(LocalContext.current)
-                        .data(data = photoUri)
+                        .Builder(context)
+                        .data(data = displayUri)
                         .build()
                 )
                 Image(

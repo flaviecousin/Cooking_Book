@@ -6,7 +6,6 @@ import com.example.cookingbook.ui.data.Recette
 import com.example.cookingbook.ui.data.RecetteRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 

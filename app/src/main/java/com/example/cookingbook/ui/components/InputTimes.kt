@@ -21,7 +21,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.Spacing
 
-@Composable
+/* @Composable
 fun InputTimes(){
     Column{
         Text(
@@ -31,17 +31,17 @@ fun InputTimes(){
         )
         Spacer(Modifier.height(Spacing.md))
         Row{
-            OrganisationTime("Préparation")
-            OrganisationTime("Cuisson")
-            OrganisationTime("Repos")
+            OrganisationTime("Préparation", value = newRecipe.titre, onValueChange = {newRecipe = newRecipe.copy(titre = it)})
+            OrganisationTime("Cuisson",  value = newRecipe.titre, onValueChange = {newRecipe = newRecipe.copy(titre = it)})
+            OrganisationTime("Repos",  value = newRecipe.titre, onValueChange = {newRecipe = newRecipe.copy(titre = it)})
         }
         Spacer(Modifier.height(Spacing.sm))
     }
-}
+}*/
 
 @Composable
-fun OrganisationTime(texte : String){
-    var text by rememberSaveable{ mutableStateOf("") }
+fun InputTime(texte : String, value: Int, onValueChange: (Int) -> Unit){
+    //var text by rememberSaveable{ mutableStateOf("") }
     Column{
         Text(
             text = texte,
@@ -50,8 +50,10 @@ fun OrganisationTime(texte : String){
         )
         Spacer(Modifier.height(Spacing.sm))
         OutlinedTextField(
-            value=text,
-            onValueChange = {text=it },
+            value=value.toString(),
+            onValueChange = { newText ->
+                onValueChange(newText.toIntOrNull() ?: 0)
+            },
             modifier = Modifier.width(Spacing.xxxl),
             shape = RoundedCornerShape(Radius.md),
             placeholder = {
