@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -18,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +32,8 @@ import com.example.cookingbook.ui.components.ChipCategory
 import com.example.cookingbook.ui.components.IngredientsButton
 import com.example.cookingbook.ui.components.IngredientsFilterWindow
 import com.example.cookingbook.ui.components.SearchBar
+import com.example.cookingbook.ui.models.RecetteViewModel
+import androidx.compose.foundation.lazy.items
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,6 +113,16 @@ fun CategoryList(){
                 onClick = {categorySelected = categorie}
 
             )
+        }
+    }
+}
+
+@Composable
+fun ListeRecettesScreen(viewModel: RecetteViewModel){
+    val recettes by viewModel.recettes.collectAsState()
+    LazyColumn {
+        items(recettes){recette ->
+            Text(text = recette.titre)
         }
     }
 }
