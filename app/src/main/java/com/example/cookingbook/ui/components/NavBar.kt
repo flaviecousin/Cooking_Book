@@ -26,11 +26,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.cookingbook.ui.models.RecetteViewModel
 
 @Composable
 fun NavigationHost(
     navController: NavHostController,
     startDestination: Destination,
+    viewModel: RecetteViewModel,
     modifier: Modifier = Modifier){
     NavHost(
         navController = navController,
@@ -40,15 +42,15 @@ fun NavigationHost(
         Destination.entries.forEach { destination ->
             composable(destination.route){
                 when(destination){
-                    Destination.RECETTES -> RecipeGridScreen()
-                    Destination.AJOUTER -> AddScreen()
+                    Destination.RECETTES -> RecipeGridScreen(viewModel)
+                    Destination.AJOUTER -> AddScreen(viewModel)
                 }
             } }
     }
 }
 
 @Composable
-fun NavBar(modifier: Modifier = Modifier){
+fun NavBar(viewModel: RecetteViewModel, modifier: Modifier = Modifier){
     val navController = rememberNavController()
     val startDestination = Destination.RECETTES
     var selectedDestination by rememberSaveable{ mutableIntStateOf(startDestination.ordinal) }
@@ -93,7 +95,7 @@ fun NavBar(modifier: Modifier = Modifier){
             }
         }
     ){contentPadding ->
-        NavigationHost(navController, startDestination, modifier = Modifier.padding(contentPadding))
+        NavigationHost(navController, startDestination, viewModel, modifier = Modifier.padding(contentPadding))
     }
 
 }

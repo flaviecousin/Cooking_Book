@@ -12,10 +12,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.cookingbook.ui.icons.HeroiconsPlus
@@ -23,8 +19,8 @@ import com.example.cookingbook.ui.icons.RadixMinus
 import com.example.cookingbook.ui.theme.Spacing
 
 @Composable
-fun NumberPeopleInput(){
-    var count by remember { mutableIntStateOf(4) }
+fun NumberPeopleInput(value: Int, onValueChange: (Int) -> Unit){
+    //var count by remember { mutableIntStateOf(4) }
     val minValue = 0
     val maxValue = 1000
 
@@ -40,30 +36,30 @@ fun NumberPeopleInput(){
         ){
             Button(
                 onClick = {
-                    if (count > minValue) count --
+                    if (value > minValue) onValueChange(value-1)
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.surface
                 ),
-                enabled = count > minValue
+                enabled = value > minValue
             ){
                 Icon(imageVector = RadixMinus, contentDescription = "Icone minus", tint = MaterialTheme.colorScheme.onBackground)
             }
             Spacer(Modifier.width(Spacing.lg))
             Text(
-                text = "$count",
+                text = "$value",
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onBackground
             )
             Spacer(Modifier.width(Spacing.lg))
             Button(
                 onClick = {
-                    if (count < maxValue) count++
+                    if (value < maxValue) onValueChange(value+1)
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.surface
                 ),
-                enabled = count < maxValue
+                enabled = value < maxValue
             ) {
                 Icon(imageVector = HeroiconsPlus, contentDescription = "Icone plus", tint = MaterialTheme.colorScheme.onBackground)
             }

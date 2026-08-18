@@ -20,23 +20,19 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.cookingbook.ui.data.Preparation
 import com.example.cookingbook.ui.icons.VscodeCodiconsError
 import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.Spacing
 
 @Composable
-fun WidgetSteps(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Unit, onClick: () -> Unit){
-    var text by rememberSaveable{ mutableStateOf("") }
+fun WidgetSteps(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Unit, onClick: () -> Unit,
+                value: String, onValueChange: (String) -> Unit){
+    //var text by rememberSaveable{ mutableStateOf("") }
 
     Column {
         Spacer(Modifier.height(Spacing.sm))
@@ -60,8 +56,8 @@ fun WidgetSteps(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Unit, o
             }
             Spacer(Modifier.width(Spacing.md))
             OutlinedTextField(
-                value=text,
-                onValueChange = { text=it },
+                value=value,
+                onValueChange = onValueChange,
                 modifier = Modifier.weight(1f),
                 shape = RoundedCornerShape(Radius.md),
                 placeholder = {
@@ -88,9 +84,7 @@ fun WidgetSteps(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Unit, o
     }
 }
 @Composable
-fun AddSteps(){
-    var nextId by remember { mutableIntStateOf(1) }
-    var stepsId by remember { mutableStateOf(listOf(0)) }
+fun AddSteps(value: List<Preparation>, onValueChange: (List<Preparation>) -> Unit){
 
     Column{
         Row(
@@ -104,17 +98,23 @@ fun AddSteps(){
                 color = MaterialTheme.colorScheme.onBackground
             )
             AddButton(onClick = {
-                stepsId = stepsId + nextId
-                nextId++
+                val newId = (value.maxOfOrNull { it.numero } ?: 0)+1
+                onValueChange(value + Preparation(numero = newId, etape = ""))
             })
         }
-        stepsId.forEachIndexed { index, id ->
-            key(id){
+        value.forEachIndexed { index, preparation ->
+            key(preparation.numero){
                 WidgetSteps(
                     labelNumber = index + 1,
-                    buttonShown = stepsId.size > 1,
+                    buttonShown = value.size > 1,
                     onDelete = {
-                        stepsId = stepsId.filter { it != id }
+                        onValueChange(value.filter{ it.numero != preparation.numero })
+                    },
+                    value = preparation.etape,
+                    onValueChange = { newStep ->
+                        onValueChange(value.map{
+                            if (it.numero == preparation.numero) it.copy(etape = newStep) else it
+                        })
                     },
                     onClick = {}
                 )

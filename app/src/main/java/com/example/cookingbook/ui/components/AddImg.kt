@@ -17,10 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -29,16 +25,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.cookingbook.ui.data.copyImageToInternalStorage
 import com.example.cookingbook.ui.icons.FeatherCamera
 import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.Spacing
 
 @Composable
-fun WidgetImg(){
-    var photoUri: Uri? by remember { mutableStateOf((null)) }
+fun WidgetImg(value: String, onValueChange: (String) -> Unit){
+    val context = LocalContext.current
+    val displayUri: Uri? = if (value.isNotEmpty()) Uri.parse(value) else null
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        // Quand le user a sélectionné une photo, son URI est retourné ici
-        photoUri = uri
+        if (uri != null){
+            val savedPath = copyImageToInternalStorage(context, uri)
+            if (savedPath != null){
+                onValueChange(savedPath)
+            }
+        }
     }
     Box(contentAlignment = Alignment.Center){
         Button(
@@ -51,12 +53,12 @@ fun WidgetImg(){
             shape = RoundedCornerShape(Radius.sm),
             modifier = Modifier.height((Spacing.xxxl)+80.dp).fillMaxWidth()
         ) {
-            if (photoUri != null){
+            if (displayUri != null){
                 // Utilisation de Coil pour afficher l'image sélectionner
                 val painter = rememberAsyncImagePainter(
                     ImageRequest
-                        .Builder(LocalContext.current)
-                        .data(data = photoUri)
+                        .Builder(context)
+                        .data(data = displayUri)
                         .build()
                 )
                 Image(

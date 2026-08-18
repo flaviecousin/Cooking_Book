@@ -19,8 +19,8 @@ import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.Spacing
 
 @Composable
-fun InputTexte(texte: String, labelTexte: String){
-    var text by rememberSaveable{ mutableStateOf("") }
+fun InputTexte(texte: String, labelTexte: String, value: String, onValueChange: (String) -> Unit){
+    //var text by rememberSaveable{ mutableStateOf("") }
     Column{
         Text(
             text = texte.uppercase(),
@@ -29,10 +29,8 @@ fun InputTexte(texte: String, labelTexte: String){
         )
         Spacer(Modifier.height(Spacing.md))
         OutlinedTextField(
-            value=text,
-            onValueChange = {it ->
-                text=it
-            },
+            value=value,
+            onValueChange = onValueChange,
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(Radius.md),
             placeholder = {

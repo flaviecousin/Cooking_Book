@@ -38,13 +38,11 @@ val categories = listOf(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InputCategories(modifier: Modifier = Modifier){
-    var expanded by remember{
-        mutableStateOf(false)
-    }
-    var selectedItem by remember {
+fun InputCategories(modifier: Modifier = Modifier, value: String, onValueChange: (String) -> Unit){
+    var expanded by remember{ mutableStateOf(false) }
+    /*var selectedItem by remember {
         mutableStateOf(DropdownItem("Desserts"))
-    }
+    }*/
     Column{
         Text(
             text = "Catégories".uppercase(),
@@ -75,7 +73,7 @@ fun InputCategories(modifier: Modifier = Modifier){
                         enabled = true
                     )
                     .fillMaxWidth(),
-                value = selectedItem.title,
+                value = value,
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = {
@@ -95,7 +93,7 @@ fun InputCategories(modifier: Modifier = Modifier){
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurface) },
                         onClick = {
-                            selectedItem = categories[index]
+                            onValueChange(item.title)
                             expanded = false
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
