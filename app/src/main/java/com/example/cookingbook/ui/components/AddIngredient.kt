@@ -17,22 +17,18 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.cookingbook.ui.data.Ingredient
 import com.example.cookingbook.ui.icons.BootstrapDot
 import com.example.cookingbook.ui.icons.HeroiconsPlus
 import com.example.cookingbook.ui.icons.VscodeCodiconsError
 import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.Spacing
-import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableIntStateOf
 
+// ----------- BUTTON TO ADD A LINE OF INGREDIENTS -----------
 @Composable
 fun AddButton (onClick : () -> Unit){
     FilledTonalButton(
@@ -59,9 +55,9 @@ fun AddButton (onClick : () -> Unit){
 }
 
 @Composable
-fun WidgetIngredient(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Unit){
-    var text by rememberSaveable{ mutableStateOf("") }
-    var texteVal by rememberSaveable{ mutableStateOf("") }
+fun WidgetIngredient(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Unit,
+                     value: String, onValueChange: (String) -> Unit,
+                     nameIngredient: String, onNameChange: (String) -> Unit){
 
     Column {
         Spacer(Modifier.height(Spacing.sm))
@@ -69,8 +65,8 @@ fun WidgetIngredient(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Un
             Icon(imageVector = BootstrapDot, contentDescription = "Icone point", tint = MaterialTheme.colorScheme.primary)
             Spacer(Modifier.width(Spacing.md))
             OutlinedTextField(
-                value=texteVal,
-                onValueChange = { texteVal=it },
+                value=value,
+                onValueChange = onValueChange,
                 modifier = Modifier.weight(1f),
                 shape = RoundedCornerShape(Radius.md),
                 placeholder = {
@@ -86,8 +82,8 @@ fun WidgetIngredient(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Un
                 )
             )
             OutlinedTextField(
-                value=text,
-                onValueChange = { text=it },
+                value=nameIngredient,
+                onValueChange = onNameChange,
                 modifier = Modifier.weight(1f),
                 shape = RoundedCornerShape(Radius.md),
                 placeholder = {
@@ -114,16 +110,13 @@ fun WidgetIngredient(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Un
         }
     }
 }
+// ----------- DISPLAY INGREDIENTS ON ADD SCREEN -----------
 @Composable
-fun AddIngredients(){
-    var nextId by remember { mutableIntStateOf(1) }
-    var ingredientsId by remember { mutableStateOf(listOf(0)) }
-
+fun AddIngredients(value: List<Ingredient>, onValueChange: (List<Ingredient>) -> Unit){
     Column{
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            //verticalAlignment = Alignment.Bottom
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -132,17 +125,29 @@ fun AddIngredients(){
                 color = MaterialTheme.colorScheme.onBackground
             )
             AddButton(onClick = {
-                ingredientsId = ingredientsId + nextId
-                nextId++
+                val newId = (value.maxOfOrNull { it.id } ?: 0)+1
+                onValueChange(value + Ingredient(id = newId, ingredient = "", quantite = ""))
             })
         }
-        ingredientsId.forEachIndexed { index, id ->
-            key(id){
+        value.forEachIndexed { index, ingredient ->
+            key(ingredient.id){
                 WidgetIngredient(
                     labelNumber = index + 1,
-                    buttonShown = ingredientsId.size > 1,
+                    buttonShown = value.size > 1,
                     onDelete = {
-                        ingredientsId = ingredientsId.filter { it != id }
+                        onValueChange(value.filter { it.id != ingredient.id })
+                    },
+                    value = ingredient.quantite,
+                    onValueChange = {newQuantite ->
+                        onValueChange(value.map {
+                            if (it.id == ingredient.id) it.copy(quantite = newQuantite) else it
+                        })
+                    },
+                    nameIngredient = ingredient.ingredient,
+                    onNameChange = { newName ->
+                        onValueChange(value.map {
+                            if (it.id == ingredient.id) it.copy(ingredient = newName) else it
+                        })
                     }
                 )
             }

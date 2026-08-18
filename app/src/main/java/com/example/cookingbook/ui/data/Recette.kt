@@ -13,7 +13,14 @@ data class Recette(
     val tempsPreparation: Int,
     val tempsCuisson: Int,
     val tempsRepos: Int,
-    val ingredients : String,
-    val instructions: String,
+    val ingredients: List<Ingredient> = listOf(Ingredient(
+        id = 1,
+        ingredient = "",
+        quantite = ""
+    )),
+    val instructions: List <Preparation> = listOf(Preparation(
+        numero = 1,
+        etape = ""
+    )),
     val conseils: String
 )

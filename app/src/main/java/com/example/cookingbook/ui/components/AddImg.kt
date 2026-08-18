@@ -17,10 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -29,7 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.example.cookingbook.ui.data.copyImgToInternalStorage
+import com.example.cookingbook.ui.data.copyImageToInternalStorage
 import com.example.cookingbook.ui.icons.FeatherCamera
 import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.Spacing
@@ -40,7 +36,7 @@ fun WidgetImg(value: String, onValueChange: (String) -> Unit){
     val displayUri: Uri? = if (value.isNotEmpty()) Uri.parse(value) else null
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null){
-            val savedPath = copyImgToInternalStorage(context, uri)
+            val savedPath = copyImageToInternalStorage(context, uri)
             if (savedPath != null){
                 onValueChange(savedPath)
             }

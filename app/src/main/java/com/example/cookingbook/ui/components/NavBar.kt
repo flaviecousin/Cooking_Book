@@ -42,7 +42,7 @@ fun NavigationHost(
         Destination.entries.forEach { destination ->
             composable(destination.route){
                 when(destination){
-                    Destination.RECETTES -> RecipeGridScreen()
+                    Destination.RECETTES -> RecipeGridScreen(viewModel)
                     Destination.AJOUTER -> AddScreen(viewModel)
                 }
             } }

@@ -5,7 +5,7 @@ import android.net.Uri
 import java.io.File
 import java.util.UUID
 
-fun copyImgToInternalStorage(context: Context, uri: Uri): String? {
+fun copyImageToInternalStorage(context: Context, uri: Uri): String? {
     return try {
         val inputStream = context.contentResolver.openInputStream(uri) ?: return null
         val fileName = "recette_${UUID.randomUUID()}.jpg"

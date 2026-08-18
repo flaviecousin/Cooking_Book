@@ -37,7 +37,7 @@ import androidx.compose.foundation.lazy.items
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecipeGridScreen(){
+fun RecipeGridScreen(viewModel: RecetteViewModel){
     val focusManager = LocalFocusManager.current
     Scaffold(
         modifier = Modifier
@@ -64,6 +64,7 @@ fun RecipeGridScreen(){
                 thickness = 1.dp,
                 color = MaterialTheme.colorScheme.surface
             )
+            ListeRecettesScreen(viewModel)
         }
     }
 }

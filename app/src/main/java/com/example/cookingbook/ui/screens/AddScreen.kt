@@ -36,6 +36,8 @@ import com.example.cookingbook.ui.components.NumberPeopleInput
 import com.example.cookingbook.ui.components.SavingButton
 import com.example.cookingbook.ui.components.WidgetImg
 import com.example.cookingbook.ui.data.Recette
+import com.example.cookingbook.ui.data.Ingredient
+import com.example.cookingbook.ui.data.Preparation
 import com.example.cookingbook.ui.models.RecetteViewModel
 import com.example.cookingbook.ui.theme.Spacing
 
@@ -50,11 +52,10 @@ fun AddScreen(viewModel: RecetteViewModel){
         tempsPreparation = 0,
         tempsCuisson = 0,
         tempsRepos = 0,
-        ingredients = "",
-        instructions = "",
+        ingredients = listOf(Ingredient(id = 1, ingredient = "", quantite = "")),
+        instructions = listOf(Preparation(numero = 1, etape = "")),
         conseils = ""
         )) }
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -113,8 +114,8 @@ fun AddScreen(viewModel: RecetteViewModel){
                 }
                 Spacer(Modifier.height(Spacing.sm))
 
-                AddIngredients()
-                AddSteps()
+                AddIngredients(value = newRecipe.ingredients, onValueChange = {newRecipe = newRecipe.copy(ingredients = it)})
+                AddSteps(value = newRecipe.instructions, onValueChange = {newRecipe = newRecipe.copy(instructions = it)})
                 InputTexte("Conseils & Avis","Notes personnelles, astuces, idées d'accompagnement...", value = newRecipe.conseils, onValueChange = {newRecipe = newRecipe.copy(conseils = it)})
             }
         }
