@@ -65,7 +65,7 @@ fun RecipeCard (titre: String, categorie: String, tempsPrep: Int, tempsCuisson: 
                         .background(
                             Brush.verticalGradient(
                                 colors = listOf(Color.Transparent,Purpley),
-                                startY = 100f
+                                startY = 150f
                             )
                         )
                 )
@@ -96,10 +96,7 @@ fun RecipeCard (titre: String, categorie: String, tempsPrep: Int, tempsCuisson: 
                         text = "$tempsTotal min",
                         style = MaterialTheme.typography.labelSmall
                     )
-                    //Spacer(modifier = Modifier.width(Spacing.xs))
                     Icon(imageVector = BootstrapDot, contentDescription = "Point", modifier = Modifier.size(12.dp))
-                    //Spacer(modifier = Modifier.width(Spacing.xs))
-                    // Afficher le nombre de personnes
                     Icon(imageVector = RadixPeople, contentDescription = "Nombre de personnes", modifier = Modifier.size(13.dp))
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(
