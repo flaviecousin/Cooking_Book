@@ -12,9 +12,16 @@ import kotlinx.coroutines.launch
 class RecetteViewModel(private val repository: RecetteRepository) : ViewModel() {
     val recettes: StateFlow<List<Recette>> = repository.allRecettes
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-    fun ajouterRecette(recette: Recette){
+    fun ajouterRecette(recette: Recette, onSuccess: () -> Unit = {}){
         viewModelScope.launch {
-            repository.insert(recette)
+            try{
+                repository.insert(recette)
+                onSuccess()
+            }
+            catch (e: Exception){
+                e.printStackTrace()
+                // gérer le message d'erreur (plus tard)
+            }
         }
     }
 }

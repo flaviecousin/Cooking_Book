@@ -16,6 +16,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
@@ -23,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,29 +38,22 @@ import com.example.cookingbook.ui.components.InputTime
 import com.example.cookingbook.ui.components.NumberPeopleInput
 import com.example.cookingbook.ui.components.SavingButton
 import com.example.cookingbook.ui.components.WidgetImg
-import com.example.cookingbook.ui.data.Recette
 import com.example.cookingbook.ui.data.Ingredient
 import com.example.cookingbook.ui.data.Preparation
+import com.example.cookingbook.ui.data.Recette
 import com.example.cookingbook.ui.models.RecetteViewModel
 import com.example.cookingbook.ui.theme.Spacing
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddScreen(viewModel: RecetteViewModel){
-    var newRecipe by remember { mutableStateOf(Recette(
-        image = "",
-        titre = "",
-        categorie = "Desserts",
-        people = 4,
-        tempsPreparation = 0,
-        tempsCuisson = 0,
-        tempsRepos = 0,
-        ingredients = listOf(Ingredient(id = 1, ingredient = "", quantite = "")),
-        instructions = listOf(Preparation(numero = 1, etape = "")),
-        conseils = ""
-        )) }
+    var newRecipe by remember { mutableStateOf(recetteVide()) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        snackbarHost =  {SnackbarHost(snackbarHostState)},
         topBar = {
             TopAppBar(
                 expandedHeight = 65.dp,
@@ -76,7 +72,12 @@ fun AddScreen(viewModel: RecetteViewModel){
                     contentAlignment = Alignment.Center,
                 ){
                     SavingButton(onClick = {
-                        viewModel.ajouterRecette(newRecipe)
+                        viewModel.ajouterRecette(newRecipe){
+                            newRecipe = recetteVide()
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar("La recette a bien été enregistrée !")
+                            }
+                        }
                     })
                 }
             }
@@ -139,3 +140,16 @@ fun TitleScreen(modifier: Modifier = Modifier) {
         )
     }
 }
+
+fun recetteVide() = Recette(
+    image = "",
+    titre = "",
+    categorie = "Desserts",
+    people = 4,
+    tempsPreparation = 0,
+    tempsCuisson = 0,
+    tempsRepos = 0,
+    ingredients = listOf(Ingredient(id = 1, ingredient = "", quantite = "")),
+    instructions = listOf(Preparation(numero = 1, etape = "")),
+    conseils = ""
+)
