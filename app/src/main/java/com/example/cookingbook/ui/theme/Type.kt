@@ -76,7 +76,7 @@ val Typography = Typography(
     labelLarge = TextStyle(
         fontFamily = DSETypewriter,
         fontSynthesis = FontSynthesis.Weight,
-        fontWeight = FontWeight.W900,
+        fontWeight = FontWeight.ExtraBold,
         fontSize = 15.sp,
         lineHeight = 18.sp,
         letterSpacing = 0.6.sp
@@ -123,6 +123,6 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 13.sp,
         lineHeight = 16.sp,
-        color = RaspberryPink
+        color = GreyPink
     )
 )
