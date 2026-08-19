@@ -34,7 +34,6 @@ import com.example.cookingbook.ui.theme.Spacing
 @Composable
 fun WidgetSteps(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Unit, onClick: () -> Unit,
                 value: String, onValueChange: (String) -> Unit){
-    //var text by rememberSaveable{ mutableStateOf("") }
 
     Column {
         Spacer(Modifier.height(Spacing.sm))

@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.cookingbook.ui.components.IngredientsList
 import com.example.cookingbook.ui.components.NumberCard
+import com.example.cookingbook.ui.components.StepsList
 import com.example.cookingbook.ui.components.TotalTimeCard
 import com.example.cookingbook.ui.data.Ingredient
 import com.example.cookingbook.ui.data.Preparation
@@ -199,6 +200,7 @@ fun RecipeScreen(
                 modifier = Modifier.padding(Spacing.sm)
             )
             Spacer(modifier = Modifier.height(Spacing.sm))
+            StepsList(preparation = preparation)
         }
     }
 }

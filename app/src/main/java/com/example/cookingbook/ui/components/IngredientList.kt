@@ -11,6 +11,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.cookingbook.ui.data.Ingredient
@@ -31,30 +32,28 @@ fun IngredientsList(ingredients: List<Ingredient>){
 
 @Composable
 fun LineIngredient(quantite: String, nourriture: String){
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(Spacing.xs)
-    ) {
-        Row(){
-            Icon(imageVector = BootstrapDot, contentDescription = "Icone point", tint = MaterialTheme.colorScheme.primary)
-            Spacer(Modifier.width(Spacing.md))
-            // Gestion de l'espace à la fin de la chaîne de caractères quantités
-            if (quantite.lastOrNull() == ' '){
-                Text(
-                    text = quantite + nourriture,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-            else{
-                Text(
-                    text = "$quantite $nourriture",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(Spacing.xs),
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        Icon(imageVector = BootstrapDot, contentDescription = "Icone point", tint = MaterialTheme.colorScheme.primary)
+        Spacer(Modifier.width(Spacing.md))
+        // Gestion de l'espace à la fin de la chaîne de caractères quantités
+        if (quantite.lastOrNull() == ' '){
+            Text(
+                text = quantite + nourriture,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground
+            )
         }
-        HorizontalDivider(thickness = (0.5).dp, color = MaterialTheme.colorScheme.surface)
+        else{
+            Text(
+                text = "$quantite $nourriture",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
     }
+    HorizontalDivider(thickness = (0.5).dp, color = MaterialTheme.colorScheme.surface)
 }
