@@ -1,6 +1,5 @@
 package com.example.cookingbook.ui.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -9,11 +8,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -21,7 +17,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
@@ -33,7 +28,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.example.cookingbook.ui.components.ChipCategory
@@ -41,12 +35,13 @@ import com.example.cookingbook.ui.components.IngredientsButton
 import com.example.cookingbook.ui.components.IngredientsFilterWindow
 import com.example.cookingbook.ui.components.RecipeCard
 import com.example.cookingbook.ui.components.SearchBar
+import com.example.cookingbook.ui.data.Recette
 import com.example.cookingbook.ui.models.RecetteViewModel
 import com.example.cookingbook.ui.theme.Spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecipeGridScreen(viewModel: RecetteViewModel){
+fun RecipeGridScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) -> Unit){
     val focusManager = LocalFocusManager.current
     Column (modifier = Modifier
         .fillMaxSize()
@@ -70,7 +65,7 @@ fun RecipeGridScreen(viewModel: RecetteViewModel){
             color = MaterialTheme.colorScheme.surface
         )
         Box(modifier = Modifier.weight(1f)){
-            ListeRecettesScreen(viewModel)
+            ListeRecettesScreen(viewModel, onRecipeClick = onRecipeClick)
         }
         }
 }
@@ -124,7 +119,7 @@ fun CategoryList(){
 }
 
 @Composable
-fun ListeRecettesScreen(viewModel: RecetteViewModel){
+fun ListeRecettesScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) -> Unit){
     val recettes by viewModel.recettes.collectAsState()
     LazyVerticalGrid (
         columns = GridCells.Fixed(2),
@@ -141,9 +136,7 @@ fun ListeRecettesScreen(viewModel: RecetteViewModel){
                 tempsRepos = recette.tempsRepos,
                 nbPers = recette.people,
                 img = recette.image,
-                onClick = {
-                    // A faire
-                }
+                onClick = { onRecipeClick(recette) }
             )
         }
     }

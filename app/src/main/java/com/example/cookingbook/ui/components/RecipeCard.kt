@@ -31,8 +31,11 @@ import coil.compose.AsyncImage
 import com.example.cookingbook.ui.icons.BootstrapDot
 import com.example.cookingbook.ui.icons.LucideClock
 import com.example.cookingbook.ui.icons.RadixPeople
+import com.example.cookingbook.ui.theme.BrownCream
 import com.example.cookingbook.ui.theme.Purpley
 import com.example.cookingbook.ui.theme.Radius
+import com.example.cookingbook.ui.theme.RaspberryPink
+import com.example.cookingbook.ui.theme.RosyPowdered
 import com.example.cookingbook.ui.theme.Spacing
 
 @Composable
@@ -65,7 +68,7 @@ fun RecipeCard (titre: String, categorie: String, tempsPrep: Int, tempsCuisson: 
                         .background(
                             Brush.verticalGradient(
                                 colors = listOf(Color.Transparent,Purpley),
-                                startY = 150f
+                                startY = 200f
                             )
                         )
                 )
@@ -79,7 +82,7 @@ fun RecipeCard (titre: String, categorie: String, tempsPrep: Int, tempsCuisson: 
                 Text(
                     text = categorie.uppercase(),
                     style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = BrownCream
                 )
                 Text(
                     text = titre,
@@ -90,21 +93,23 @@ fun RecipeCard (titre: String, categorie: String, tempsPrep: Int, tempsCuisson: 
                 )
                 Spacer(modifier = Modifier.height(Spacing.xs))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = LucideClock, contentDescription = "Icône de temps", modifier = Modifier.size(13.dp))
+                    Icon(imageVector = LucideClock, contentDescription = "Icône de temps", modifier = Modifier.size(13.dp), tint = BrownCream)
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(
                         text = "$tempsTotal min",
                         style = MaterialTheme.typography.labelSmall
                     )
                     Icon(imageVector = BootstrapDot, contentDescription = "Point", modifier = Modifier.size(12.dp))
-                    Icon(imageVector = RadixPeople, contentDescription = "Nombre de personnes", modifier = Modifier.size(13.dp))
+                    //Spacer(modifier = Modifier.width(Spacing.xs))
+                    // Afficher le nombre de personnes
+                    Icon(imageVector = RadixPeople, contentDescription = "Nombre de personnes", modifier = Modifier.size(13.dp), tint = BrownCream)
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(
                         text = "$nbPers",
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
-                Spacer(modifier = Modifier.height(Spacing.md))
+                //Spacer(modifier = Modifier.height(Spacing.md))
             }
         }
     }

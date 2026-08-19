@@ -94,7 +94,7 @@ val Typography = Typography(
     bodySmall = TextStyle(
         fontFamily = DSETypewriter,
         fontSynthesis = FontSynthesis.Weight,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.ExtraBold,
         fontSize = 14.sp,
         lineHeight = 20.sp,
     ),
@@ -123,6 +123,6 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 13.sp,
         lineHeight = 16.sp,
-        color = GreyPink
+        color = RosyPowdered
     )
 )
