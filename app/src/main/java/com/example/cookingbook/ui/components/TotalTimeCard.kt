@@ -29,7 +29,6 @@ fun TotalTimeCard(tempsPrep: Int, tempsCuisson: Int, tempsRepos: Int){
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
         ),
-        //border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.primaryContainer),
         modifier = Modifier
             .padding(Spacing.sm)
             .fillMaxWidth()

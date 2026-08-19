@@ -97,7 +97,8 @@ fun RecipeCard (titre: String, categorie: String, tempsPrep: Int, tempsCuisson: 
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(
                         text = "$tempsTotal min",
-                        style = MaterialTheme.typography.labelSmall
+                        style = MaterialTheme.typography.labelSmall,
+                        color = RosyPowdered
                     )
                     Icon(imageVector = BootstrapDot, contentDescription = "Point", modifier = Modifier.size(12.dp))
                     //Spacer(modifier = Modifier.width(Spacing.xs))
@@ -106,7 +107,8 @@ fun RecipeCard (titre: String, categorie: String, tempsPrep: Int, tempsCuisson: 
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(
                         text = "$nbPers",
-                        style = MaterialTheme.typography.labelSmall
+                        style = MaterialTheme.typography.labelSmall,
+                        color = RosyPowdered
                     )
                 }
                 //Spacer(modifier = Modifier.height(Spacing.md))

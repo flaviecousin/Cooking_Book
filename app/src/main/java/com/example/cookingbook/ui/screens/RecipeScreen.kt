@@ -31,9 +31,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.cookingbook.ui.components.IngredientsList
 import com.example.cookingbook.ui.components.NumberCard
 import com.example.cookingbook.ui.components.TotalTimeCard
 import com.example.cookingbook.ui.data.Ingredient
@@ -45,7 +45,6 @@ import com.example.cookingbook.ui.icons.LucideClock
 import com.example.cookingbook.ui.icons.PhosphorMoon
 import com.example.cookingbook.ui.icons.RadixPencil1
 import com.example.cookingbook.ui.icons.RadixPeople
-import com.example.cookingbook.ui.theme.BrownCream
 import com.example.cookingbook.ui.theme.Purpley
 import com.example.cookingbook.ui.theme.RosyPowdered
 import com.example.cookingbook.ui.theme.Spacing
@@ -109,6 +108,7 @@ fun RecipeScreen(
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ){
+            // ------ IMAGE + CATÉGORIE + TITRE DE LA RECETTE ------
             Box(modifier = Modifier
                 .fillMaxSize()
                 .height(300.dp)
@@ -150,6 +150,8 @@ fun RecipeScreen(
                     )
                 }
             }
+
+            // ------ TEMPS + NOMBRE DE PERSONNES ------
             Row(modifier = Modifier.fillMaxWidth()) {
                 NumberCard(text = "Prép.", icone = LucideClock, textIcone = "Temps de préparation", number = tempsPrep)
                 NumberCard(text = "Cuisson", icone = FeatherThermometer, textIcone = "Temps de cuisson", number = tempsCuisson)
@@ -159,7 +161,44 @@ fun RecipeScreen(
             }
             TotalTimeCard(tempsPrep = tempsPrep, tempsCuisson = tempsCuisson, tempsRepos = tempsRepos)
             Spacer(modifier = Modifier.height(Spacing.sm))
-            HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.surface)
+            HorizontalDivider(thickness = 2.dp, color = MaterialTheme.colorScheme.surface, modifier = Modifier.padding(Spacing.sm))
+            Spacer(modifier = Modifier.height(Spacing.md))
+
+            // ------ INGRÉDIENTS ------
+            Text(
+                text = "Ingrédients".uppercase(),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                modifier = Modifier.padding(Spacing.sm)
+            )
+            Spacer(modifier = Modifier.height(Spacing.sm))
+            Text(
+                text = "Pour $nbPers personnes",
+                style = MaterialTheme.typography.displayMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.padding(Spacing.sm)
+            )
+            Spacer(modifier = Modifier.height(Spacing.md))
+            IngredientsList(ingredient)
+            Spacer(modifier = Modifier.height(Spacing.sm))
+            HorizontalDivider(thickness = 2.dp, color = MaterialTheme.colorScheme.surface, modifier = Modifier.padding(Spacing.sm))
+            Spacer(modifier = Modifier.height(Spacing.md))
+
+            // ------ PRÉPARATION ------
+            Text(
+                text = "Préparation".uppercase(),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                modifier = Modifier.padding(Spacing.sm)
+            )
+            Spacer(modifier = Modifier.height(Spacing.sm))
+            Text(
+                text = "Étape par étape",
+                style = MaterialTheme.typography.displayMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.padding(Spacing.sm)
+            )
+            Spacer(modifier = Modifier.height(Spacing.sm))
         }
     }
 }

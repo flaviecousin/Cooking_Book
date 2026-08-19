@@ -67,7 +67,7 @@ fun RecipeGridScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) -> Un
         Box(modifier = Modifier.weight(1f)){
             ListeRecettesScreen(viewModel, onRecipeClick = onRecipeClick)
         }
-        }
+    }
 }
 
 @Composable

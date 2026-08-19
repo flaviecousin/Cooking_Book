@@ -123,6 +123,6 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 13.sp,
         lineHeight = 16.sp,
-        color = RosyPowdered
+        color = RaspberryPink
     )
 )
