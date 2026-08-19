@@ -33,6 +33,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.cookingbook.ui.components.AdviceCard
 import com.example.cookingbook.ui.components.IngredientsList
 import com.example.cookingbook.ui.components.NumberCard
 import com.example.cookingbook.ui.components.StepsList
@@ -60,7 +61,6 @@ fun RecipeScreen(
     ingredient: List<Ingredient>, preparation: List<Preparation>,
     conseils: String, onPartage: () -> Unit
 ){
-    //val tempsTotal = tempsCuisson + tempsPrep + tempsRepos
     val aUneImage = img.isNotEmpty()
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
@@ -201,6 +201,19 @@ fun RecipeScreen(
             )
             Spacer(modifier = Modifier.height(Spacing.sm))
             StepsList(preparation = preparation)
+            Spacer(modifier = Modifier.height(Spacing.sm))
+            HorizontalDivider(thickness = 2.dp, color = MaterialTheme.colorScheme.surface, modifier = Modifier.padding(Spacing.sm))
+
+            // ------ CONSEILS & AVIS ------
+            Text(
+                text = "Conseils & avis".uppercase(),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                modifier = Modifier.padding(Spacing.sm)
+            )
+            Spacer(modifier = Modifier.height(Spacing.sm))
+            AdviceCard(advices = conseils)
+            Spacer (modifier = Modifier.height(Spacing.lg))
         }
     }
 }
