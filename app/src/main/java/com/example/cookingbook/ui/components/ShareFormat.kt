@@ -37,8 +37,7 @@ fun openRecipeFile(context: Context, bitmap: ImageBitmap, fileName: String, form
 
     val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
     val intent = Intent(Intent.ACTION_VIEW).apply {
-        type = mimeType
-        putExtra(Intent.EXTRA_STREAM, uri)
+        setDataAndType(uri, mimeType)
         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
     context.startActivity(Intent.createChooser(intent, "Ouvrir avec"))
@@ -52,10 +51,14 @@ private fun saveAsImage(context: Context, bitmap: Bitmap, fileName: String): Fil
 }
 
 private fun saveAsPdf(context: Context, bitmap: Bitmap, fileName: String): File{
+    val softwareBitmap = if(bitmap.config == Bitmap.Config.HARDWARE){
+        bitmap.copy(Bitmap.Config.ARGB_8888, false)
+    } else bitmap
+
     val document = PdfDocument()
-    val pageInfo = PdfDocument.PageInfo.Builder(bitmap.width, bitmap.height, 1).create()
+    val pageInfo = PdfDocument.PageInfo.Builder(softwareBitmap.width, softwareBitmap.height, 1).create()
     val page = document.startPage(pageInfo)
-    page.canvas.drawBitmap(bitmap, 0f, 0f, null)
+    page.canvas.drawBitmap(softwareBitmap, 0f, 0f, null)
     document.finishPage(page)
 
     val dir = File(context.cacheDir, "pdfs").apply { mkdirs() }
