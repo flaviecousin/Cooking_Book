@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,24 +21,36 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.cookingbook.ui.components.AdviceCard
 import com.example.cookingbook.ui.components.IngredientsList
 import com.example.cookingbook.ui.components.NumberCard
+import com.example.cookingbook.ui.components.ShareAction
+import com.example.cookingbook.ui.components.ShareButton
+import com.example.cookingbook.ui.components.ShareFormatDialog
 import com.example.cookingbook.ui.components.StepsList
 import com.example.cookingbook.ui.components.TotalTimeCard
+import com.example.cookingbook.ui.components.openRecipeFile
+import com.example.cookingbook.ui.components.shareRecipe
 import com.example.cookingbook.ui.data.Ingredient
 import com.example.cookingbook.ui.data.Preparation
 import com.example.cookingbook.ui.icons.FeatherThermometer
@@ -50,6 +63,8 @@ import com.example.cookingbook.ui.icons.RadixPeople
 import com.example.cookingbook.ui.theme.Purpley
 import com.example.cookingbook.ui.theme.RosyPowdered
 import com.example.cookingbook.ui.theme.Spacing
+import com.example.cookingbook.ui.utils.CapturableContent
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,156 +79,230 @@ fun RecipeScreen(
     val aUneImage = img.isNotEmpty()
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
+    val context = LocalContext.current
+    val graphicsLayer = rememberGraphicsLayer()
+    val scope = rememberCoroutineScope()
+    var showFormatDialog by remember { mutableStateOf(false) }
 
     BackHandler(onBack = onBack)
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .clickable(
-            indication = null,
-            interactionSource = remember { MutableInteractionSource() }
-        ) {
-            focusManager.clearFocus()
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        contentWindowInsets = WindowInsets(0,0,0,0),
+        topBar = {
+            TopAppBar(
+                colors = topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                ),
+                title = { /*Intitulé optionnel*/ },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = FluentuiSystemIconsArrowLeft,
+                            contentDescription = "Flèche retour",
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onModification) {
+                        Icon(
+                            imageVector = RadixPencil1,
+                            contentDescription = "Modifier la recette",
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+                    IconButton(onClick = onDelete) {
+                        Icon(
+                            imageVector = FluentuiSystemIconsDelete,
+                            contentDescription = "Supprimer la recette",
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+                }
+            )
+        },
+        floatingActionButton = {
+            ShareButton(onClick = { showFormatDialog = true })
         }
-    ) {
-        TopAppBar(
-            colors = topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background,
-            ),
-            title= { /*Intitulé optionnel*/ },
-            navigationIcon = {
-                IconButton(onClick = onBack) {
-                    Icon(imageVector = FluentuiSystemIconsArrowLeft,
-                        contentDescription = "Flèche retour",
-                        tint = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-            },
-            actions = {
-                IconButton(onClick = onModification) {
-                    Icon(imageVector = RadixPencil1,
-                        contentDescription = "Modifier la recette",
-                        tint = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-                IconButton(onClick = onDelete) {
-                    Icon(imageVector = FluentuiSystemIconsDelete,
-                        contentDescription = "Supprimer la recette",
-                        tint = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-            }
-        )
+    ){innerPadding ->
         Column(
             modifier = Modifier
+                .padding(innerPadding)
                 .fillMaxSize()
-                .verticalScroll(scrollState)
-        ){
-            // ------ IMAGE + CATÉGORIE + TITRE DE LA RECETTE ------
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .height(300.dp)
-                .background(Purpley)
-            ){
-                if (aUneImage){
-                    AsyncImage(
-                        model = img,
-                        contentDescription = "Photo de $titre",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) {
+                    focusManager.clearFocus()
+                }
+        ) {
+            CapturableContent(graphicsLayer = graphicsLayer) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                ) {
+                    // ------ IMAGE + CATÉGORIE + TITRE DE LA RECETTE ------
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(
-                                Brush.verticalGradient(
-                                    colors = listOf(Color.Transparent,Purpley),
-                                    startY = 25f
-                                )
+                            .height(300.dp)
+                            .background(Purpley)
+                    ) {
+                        if (aUneImage) {
+                            AsyncImage(
+                                model = img,
+                                contentDescription = "Photo de $titre",
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop
                             )
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(
+                                        Brush.verticalGradient(
+                                            colors = listOf(Color.Transparent, Purpley),
+                                            startY = 25f
+                                        )
+                                    )
+                            )
+                        }
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(Spacing.md),
+                            horizontalAlignment = Alignment.Start,
+                            verticalArrangement = Arrangement.Bottom
+                        ) {
+                            Text(
+                                text = categorie.uppercase(),
+                                style = MaterialTheme.typography.labelLarge,
+                                color = RosyPowdered
+                            )
+                            Text(
+                                text = titre,
+                                style = MaterialTheme.typography.displayLarge,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                            )
+                        }
+                    }
+
+                    // ------ TEMPS + NOMBRE DE PERSONNES ------
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        NumberCard(
+                            text = "Prép.",
+                            icone = LucideClock,
+                            textIcone = "Temps de préparation",
+                            number = tempsPrep
+                        )
+                        NumberCard(
+                            text = "Cuisson",
+                            icone = FeatherThermometer,
+                            textIcone = "Temps de cuisson",
+                            number = tempsCuisson
+                        )
+                        NumberCard(
+                            text = "Repos",
+                            icone = PhosphorMoon,
+                            textIcone = "Temps de repos",
+                            number = tempsRepos
+                        )
+                        NumberCard(
+                            text = "Pers.",
+                            icone = RadixPeople,
+                            textIcone = "Nombre de personne",
+                            number = nbPers
+                        )
+                        Spacer(modifier = Modifier.height(Spacing.md))
+                    }
+                    TotalTimeCard(
+                        tempsPrep = tempsPrep,
+                        tempsCuisson = tempsCuisson,
+                        tempsRepos = tempsRepos
                     )
-                }
-                Column(modifier = Modifier
-                    .fillMaxSize()
-                    .padding(Spacing.md),
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.Bottom
-                ) {
+                    Spacer(modifier = Modifier.height(Spacing.sm))
+                    HorizontalDivider(
+                        thickness = 2.dp,
+                        color = MaterialTheme.colorScheme.surface,
+                        modifier = Modifier.padding(Spacing.sm)
+                    )
+                    Spacer(modifier = Modifier.height(Spacing.md))
+
+                    // ------ INGRÉDIENTS ------
                     Text(
-                        text = categorie.uppercase(),
+                        text = "Ingrédients".uppercase(),
                         style = MaterialTheme.typography.labelLarge,
-                        color = RosyPowdered
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.padding(Spacing.sm)
                     )
+                    Spacer(modifier = Modifier.height(Spacing.sm))
                     Text(
-                        text = titre,
-                        style = MaterialTheme.typography.displayLarge,
-                        color = MaterialTheme.colorScheme.onPrimary,
+                        text = "Pour $nbPers personnes",
+                        style = MaterialTheme.typography.displayMedium,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.padding(Spacing.sm)
                     )
+                    Spacer(modifier = Modifier.height(Spacing.md))
+                    IngredientsList(ingredient)
+                    Spacer(modifier = Modifier.height(Spacing.sm))
+                    HorizontalDivider(
+                        thickness = 2.dp,
+                        color = MaterialTheme.colorScheme.surface,
+                        modifier = Modifier.padding(Spacing.sm)
+                    )
+                    Spacer(modifier = Modifier.height(Spacing.md))
+
+                    // ------ PRÉPARATION ------
+                    Text(
+                        text = "Préparation".uppercase(),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.padding(Spacing.sm)
+                    )
+                    Spacer(modifier = Modifier.height(Spacing.sm))
+                    Text(
+                        text = "Étape par étape",
+                        style = MaterialTheme.typography.displayMedium,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.padding(Spacing.sm)
+                    )
+                    Spacer(modifier = Modifier.height(Spacing.sm))
+                    StepsList(preparation = preparation)
+                    Spacer(modifier = Modifier.height(Spacing.sm))
+                    HorizontalDivider(
+                        thickness = 2.dp,
+                        color = MaterialTheme.colorScheme.surface,
+                        modifier = Modifier.padding(Spacing.sm)
+                    )
+
+                    // ------ CONSEILS & AVIS ------
+                    Text(
+                        text = "Conseils & avis".uppercase(),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.padding(Spacing.sm)
+                    )
+                    Spacer(modifier = Modifier.height(Spacing.sm))
+                    AdviceCard(advices = conseils)
+                    Spacer(modifier = Modifier.height(Spacing.lg))
                 }
             }
-
-            // ------ TEMPS + NOMBRE DE PERSONNES ------
-            Row(modifier = Modifier.fillMaxWidth()) {
-                NumberCard(text = "Prép.", icone = LucideClock, textIcone = "Temps de préparation", number = tempsPrep)
-                NumberCard(text = "Cuisson", icone = FeatherThermometer, textIcone = "Temps de cuisson", number = tempsCuisson)
-                NumberCard(text = "Repos", icone = PhosphorMoon, textIcone = "Temps de repos", number = tempsRepos)
-                NumberCard(text = "Pers.", icone = RadixPeople, textIcone = "Nombre de personne", number = nbPers)
-                Spacer(modifier = Modifier.height(Spacing.md))
+            if (showFormatDialog) {
+                ShareFormatDialog(
+                    onDismiss = { showFormatDialog = false },
+                    onConfirm = { format, action ->
+                        showFormatDialog = false
+                        scope.launch {
+                            val bitmap = graphicsLayer.toImageBitmap()
+                            when (action) {
+                                ShareAction.SHARE -> shareRecipe(context, bitmap, fileName = titre.replace(" ", "_"), format)
+                                ShareAction.OPEN -> openRecipeFile(context, bitmap, fileName = titre.replace(" ", "_"), format)
+                            }
+                        }
+                    }
+                )
             }
-            TotalTimeCard(tempsPrep = tempsPrep, tempsCuisson = tempsCuisson, tempsRepos = tempsRepos)
-            Spacer(modifier = Modifier.height(Spacing.sm))
-            HorizontalDivider(thickness = 2.dp, color = MaterialTheme.colorScheme.surface, modifier = Modifier.padding(Spacing.sm))
-            Spacer(modifier = Modifier.height(Spacing.md))
-
-            // ------ INGRÉDIENTS ------
-            Text(
-                text = "Ingrédients".uppercase(),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                modifier = Modifier.padding(Spacing.sm)
-            )
-            Spacer(modifier = Modifier.height(Spacing.sm))
-            Text(
-                text = "Pour $nbPers personnes",
-                style = MaterialTheme.typography.displayMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.padding(Spacing.sm)
-            )
-            Spacer(modifier = Modifier.height(Spacing.md))
-            IngredientsList(ingredient)
-            Spacer(modifier = Modifier.height(Spacing.sm))
-            HorizontalDivider(thickness = 2.dp, color = MaterialTheme.colorScheme.surface, modifier = Modifier.padding(Spacing.sm))
-            Spacer(modifier = Modifier.height(Spacing.md))
-
-            // ------ PRÉPARATION ------
-            Text(
-                text = "Préparation".uppercase(),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                modifier = Modifier.padding(Spacing.sm)
-            )
-            Spacer(modifier = Modifier.height(Spacing.sm))
-            Text(
-                text = "Étape par étape",
-                style = MaterialTheme.typography.displayMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.padding(Spacing.sm)
-            )
-            Spacer(modifier = Modifier.height(Spacing.sm))
-            StepsList(preparation = preparation)
-            Spacer(modifier = Modifier.height(Spacing.sm))
-            HorizontalDivider(thickness = 2.dp, color = MaterialTheme.colorScheme.surface, modifier = Modifier.padding(Spacing.sm))
-
-            // ------ CONSEILS & AVIS ------
-            Text(
-                text = "Conseils & avis".uppercase(),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                modifier = Modifier.padding(Spacing.sm)
-            )
-            Spacer(modifier = Modifier.height(Spacing.sm))
-            AdviceCard(advices = conseils)
-            Spacer (modifier = Modifier.height(Spacing.lg))
         }
     }
 }
