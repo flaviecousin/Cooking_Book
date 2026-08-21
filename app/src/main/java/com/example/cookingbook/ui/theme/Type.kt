@@ -76,7 +76,7 @@ val Typography = Typography(
     labelLarge = TextStyle(
         fontFamily = DSETypewriter,
         fontSynthesis = FontSynthesis.Weight,
-        fontWeight = FontWeight.W900,
+        fontWeight = FontWeight.ExtraBold,
         fontSize = 15.sp,
         lineHeight = 18.sp,
         letterSpacing = 0.6.sp
@@ -94,7 +94,7 @@ val Typography = Typography(
     bodySmall = TextStyle(
         fontFamily = DSETypewriter,
         fontSynthesis = FontSynthesis.Weight,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.ExtraBold,
         fontSize = 14.sp,
         lineHeight = 20.sp,
     ),

@@ -4,17 +4,19 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
@@ -31,40 +33,39 @@ import androidx.compose.ui.unit.dp
 import com.example.cookingbook.ui.components.ChipCategory
 import com.example.cookingbook.ui.components.IngredientsButton
 import com.example.cookingbook.ui.components.IngredientsFilterWindow
+import com.example.cookingbook.ui.components.RecipeCard
 import com.example.cookingbook.ui.components.SearchBar
+import com.example.cookingbook.ui.data.Recette
 import com.example.cookingbook.ui.models.RecetteViewModel
-import androidx.compose.foundation.lazy.items
+import com.example.cookingbook.ui.theme.Spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecipeGridScreen(viewModel: RecetteViewModel){
+fun RecipeGridScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) -> Unit){
     val focusManager = LocalFocusManager.current
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() }
-            ) {
-                focusManager.clearFocus()
-            },
-        topBar = {
-            TopAppBar(
-                colors = topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                ),
-                title = {Title()}
-            )
+    Column (modifier = Modifier
+        .fillMaxSize()
+        .clickable(
+            indication = null,
+            interactionSource = remember { MutableInteractionSource() }
+        ) {
+            focusManager.clearFocus()
         }
-    ) { innerPadding ->
-        Column (modifier = Modifier.padding(innerPadding)){
-            SearchBar(modifier = Modifier.fillMaxWidth())
-            CategoryList()
-            HorizontalDivider(
-                thickness = 1.dp,
-                color = MaterialTheme.colorScheme.surface
-            )
-            ListeRecettesScreen(viewModel)
+    ){
+        TopAppBar(
+            colors = topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.background
+            ),
+            title = {Title()}
+        )
+        SearchBar(modifier = Modifier.fillMaxWidth())
+        CategoryList()
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.surface
+        )
+        Box(modifier = Modifier.weight(1f)){
+            ListeRecettesScreen(viewModel, onRecipeClick = onRecipeClick)
         }
     }
 }
@@ -82,7 +83,6 @@ fun Title(modifier: Modifier = Modifier) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            //verticalAlignment = Alignment.Bottom
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -119,11 +119,25 @@ fun CategoryList(){
 }
 
 @Composable
-fun ListeRecettesScreen(viewModel: RecetteViewModel){
+fun ListeRecettesScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) -> Unit){
     val recettes by viewModel.recettes.collectAsState()
-    LazyColumn {
+    LazyVerticalGrid (
+        columns = GridCells.Fixed(2),
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.md),
+        verticalArrangement = Arrangement.spacedBy(Spacing.md),
+        contentPadding = PaddingValues(Spacing.md))
+        {
         items(recettes){recette ->
-            Text(text = recette.titre)
+            RecipeCard(titre = recette.titre,
+                categorie = recette.categorie,
+                tempsPrep = recette.tempsPreparation,
+                tempsCuisson = recette.tempsCuisson,
+                tempsRepos = recette.tempsRepos,
+                nbPers = recette.people,
+                img = recette.image,
+                onClick = { onRecipeClick(recette) }
+            )
         }
     }
 }
