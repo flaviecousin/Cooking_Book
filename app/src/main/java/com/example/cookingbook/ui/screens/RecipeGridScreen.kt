@@ -42,6 +42,7 @@ import com.example.cookingbook.ui.theme.Spacing
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeGridScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) -> Unit){
+    var categorySelected by remember{ mutableStateOf("Tout") }
     val focusManager = LocalFocusManager.current
     Column (modifier = Modifier
         .fillMaxSize()
@@ -59,13 +60,16 @@ fun RecipeGridScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) -> Un
             title = {Title()}
         )
         SearchBar(modifier = Modifier.fillMaxWidth())
-        CategoryList()
+        CategoryList(
+            categorySelected = categorySelected,
+            onCategorySelected = {categorySelected = it}
+        )
         HorizontalDivider(
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.surface
         )
         Box(modifier = Modifier.weight(1f)){
-            ListeRecettesScreen(viewModel, onRecipeClick = onRecipeClick)
+            ListeRecettesScreen(viewModel, categorySelected = categorySelected,onRecipeClick = onRecipeClick)
         }
     }
 }
@@ -102,8 +106,7 @@ fun Title(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CategoryList(){
-    var categorySelected by remember{ mutableStateOf("Tout") }
+fun CategoryList(categorySelected: String, onCategorySelected: (String) -> Unit){
     val categories = listOf("Tout", "Entrées", "Plats", "Desserts", "Pains", "Boissons", "A tester","Pas chères et faciles")
     Row(modifier = Modifier.horizontalScroll(rememberScrollState()))
     {
@@ -111,7 +114,7 @@ fun CategoryList(){
             ChipCategory(
                 texte = categorie,
                 isSelected = categorie == categorySelected,
-                onClick = {categorySelected = categorie}
+                onClick = {onCategorySelected (categorie)}
 
             )
         }
@@ -119,8 +122,14 @@ fun CategoryList(){
 }
 
 @Composable
-fun ListeRecettesScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) -> Unit){
+fun ListeRecettesScreen(viewModel: RecetteViewModel, categorySelected: String, onRecipeClick: (Recette) -> Unit){
     val recettes by viewModel.recettes.collectAsState()
+    val recettesFiltrees = if(categorySelected == "Tout"){
+        recettes
+    }
+    else{
+        recettes.filter{it.categorie == categorySelected}
+    }
     LazyVerticalGrid (
         columns = GridCells.Fixed(2),
         modifier = Modifier.fillMaxWidth(),
@@ -128,7 +137,7 @@ fun ListeRecettesScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) ->
         verticalArrangement = Arrangement.spacedBy(Spacing.md),
         contentPadding = PaddingValues(Spacing.md))
         {
-        items(recettes){recette ->
+        items(recettesFiltrees){recette ->
             RecipeCard(titre = recette.titre,
                 categorie = recette.categorie,
                 tempsPrep = recette.tempsPreparation,
