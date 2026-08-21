@@ -44,6 +44,7 @@ import com.example.cookingbook.ui.theme.Spacing
 fun RecipeGridScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) -> Unit){
     var categorySelected by remember{ mutableStateOf("Tout") }
     val focusManager = LocalFocusManager.current
+    val recettes by viewModel.recettes.collectAsState()
     Column (modifier = Modifier
         .fillMaxSize()
         .clickable(
@@ -59,7 +60,7 @@ fun RecipeGridScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) -> Un
             ),
             title = {Title()}
         )
-        SearchBar(modifier = Modifier.fillMaxWidth())
+        SearchBar(recettes = recettes, onResultClick = onRecipeClick)
         CategoryList(
             categorySelected = categorySelected,
             onCategorySelected = {categorySelected = it}
