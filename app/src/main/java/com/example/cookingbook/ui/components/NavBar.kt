@@ -73,10 +73,7 @@ fun NavigationHost(
                     },
                     ingredient = recette.ingredients,
                     preparation = recette.instructions,
-                    conseils = recette.conseils,
-                    onPartage = {
-                        // A faire
-                    }
+                    conseils = recette.conseils
                 )
             }
         }

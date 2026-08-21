@@ -6,9 +6,12 @@ import android.graphics.Bitmap
 import android.graphics.pdf.PdfDocument
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.content.FileProvider
+import com.example.cookingbook.ui.theme.WarmCream
 import java.io.File
 import java.io.FileOutputStream
+import androidx.core.graphics.createBitmap
 
 enum class ShareFormat { IMAGE, PDF }
 
@@ -44,9 +47,21 @@ fun openRecipeFile(context: Context, bitmap: ImageBitmap, fileName: String, form
 }
 
 private fun saveAsImage(context: Context, bitmap: Bitmap, fileName: String): File{
+    val softwareBitmap = if (bitmap.config == Bitmap.Config.HARDWARE){
+        bitmap.copy(Bitmap.Config.ARGB_8888, false)
+    }
+    else{
+        bitmap
+    }
+    val backgroundColor = WarmCream.toArgb()
+    val bitmapWithBackground = createBitmap(softwareBitmap.width, softwareBitmap.height).apply {
+        val canvas = android.graphics.Canvas(this)
+        canvas.drawColor(backgroundColor)
+        canvas.drawBitmap(softwareBitmap, 0f, 0f, null)
+    }
     val dir = File(context.cacheDir, "images").apply { mkdirs() }
     val file = File(dir, "$fileName.png")
-    FileOutputStream(file).use {out -> bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)}
+    FileOutputStream(file).use {out -> bitmapWithBackground.compress(Bitmap.CompressFormat.PNG, 100, out)}
     return file
 }
 

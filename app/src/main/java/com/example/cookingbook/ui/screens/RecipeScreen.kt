@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -32,7 +31,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -40,9 +38,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
-import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.cookingbook.ui.components.AdviceCard
@@ -68,7 +66,6 @@ import com.example.cookingbook.ui.theme.Purpley
 import com.example.cookingbook.ui.theme.RosyPowdered
 import com.example.cookingbook.ui.theme.Spacing
 import com.example.cookingbook.ui.utils.CapturableContent
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 private fun Modifier.captureFullSize() = this.layout { measurable, constraints ->
@@ -240,7 +237,7 @@ fun RecipeScreen(
     nbPers: Int, img: String,
     onBack: () -> Unit, onDelete: () -> Unit, onModification: () -> Unit,
     ingredient: List<Ingredient>, preparation: List<Preparation>,
-    conseils: String, onPartage: () -> Unit
+    conseils: String
 ){
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
@@ -297,6 +294,7 @@ fun RecipeScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
