@@ -156,7 +156,7 @@ fun Title(selectedIngredientsCount: Int, onFilterClick: () -> Unit, modifier: Mo
 
 @Composable
 fun CategoryList(categorySelected: String, onCategorySelected: (String) -> Unit){
-    val categories = listOf("Tout", "Entrées", "Plats", "Desserts", "Pains", "Boissons", "A tester","Pas chères et faciles")
+    val categories = listOf("Tout", "Entrées", "Plats", "Desserts", "Pains", "Boissons", "A tester","Pas chères et faciles", "BBQ", "Noël/Festif")
     Row(modifier = Modifier.horizontalScroll(rememberScrollState()))
     {
         categories.forEach { categorie ->

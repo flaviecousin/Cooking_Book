@@ -33,16 +33,16 @@ val categories = listOf(
     DropdownItem("Pains"),
     DropdownItem("Boissons"),
     DropdownItem("A tester"),
-    DropdownItem("Pas chères et faciles")
+    DropdownItem("Pas chères et faciles"),
+    DropdownItem("BBQ"),
+    DropdownItem("Noël/Festif")
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InputCategories(modifier: Modifier = Modifier, value: String, onValueChange: (String) -> Unit){
     var expanded by remember{ mutableStateOf(false) }
-    /*var selectedItem by remember {
-        mutableStateOf(DropdownItem("Desserts"))
-    }*/
+
     Column{
         Text(
             text = "Catégories".uppercase(),

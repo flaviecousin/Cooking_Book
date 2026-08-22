@@ -355,7 +355,7 @@ fun RecipeScreen(
                 AlertDialog(
                     onDismissRequest = {showDeleteDialog = false},
                     title = { Text("Supprimer la recette ?") },
-                    text = { Text("Cette action est irréversible. Voulez-vous vraiment supprimer \$titre\" ?")},
+                    text = { Text("Cette action est irréversible. Voulez-vous vraiment supprimer \"$titre\" ?")},
                     confirmButton = {
                         TextButton(onClick = {
                             showDeleteDialog = false
