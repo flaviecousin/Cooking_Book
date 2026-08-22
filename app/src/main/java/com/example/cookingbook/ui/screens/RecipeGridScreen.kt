@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,12 +40,39 @@ import com.example.cookingbook.ui.data.Recette
 import com.example.cookingbook.ui.models.RecetteViewModel
 import com.example.cookingbook.ui.theme.Spacing
 
+private fun normalizeIngredientKey(name: String): String{
+    val lower = name.trim().lowercase()
+    return when{
+        lower.length > 1 && (lower.endsWith("s") || lower.endsWith("x")) -> lower.dropLast(1)
+        else -> lower
+    }
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeGridScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) -> Unit){
     var categorySelected by remember{ mutableStateOf("Tout") }
+    var selectedIngredients by remember { mutableStateOf(setOf<String>()) }
+    var showIngredientFilter by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
     val recettes by viewModel.recettes.collectAsState()
+
+    // Liste dynamique et dédupliquée (insensible à la casse) de tous les ingrédients existants
+    val availableIngredients = remember(recettes){
+        recettes
+            .flatMap { it.ingredients }
+            .map { it.ingredient.trim() }
+            .filter { it.isNotBlank() }
+            .groupBy { normalizeIngredientKey(it) }
+            .map { (_, variantes) -> variantes.minBy { it.length } }
+            .sortedBy { it.lowercase() }
+    }
+    // Si un ingrédient sélectionné disparaît (recette modifiée/supprimée), on nettoit la sélection
+    LaunchedEffect(availableIngredients) {
+        val availableSet = availableIngredients.toSet()
+        if (!availableSet.containsAll(selectedIngredients)){
+            selectedIngredients = selectedIngredients.intersect(availableSet)
+        }
+    }
     Column (modifier = Modifier
         .fillMaxSize()
         .clickable(
@@ -58,7 +86,12 @@ fun RecipeGridScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) -> Un
             colors = topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.background
             ),
-            title = {Title()}
+            title = {
+                Title(
+                    selectedIngredientsCount = selectedIngredients.size,
+                    onFilterClick = {showIngredientFilter = true}
+                )
+            }
         )
         SearchBar(recettes = recettes, onResultClick = onRecipeClick)
         CategoryList(
@@ -70,14 +103,34 @@ fun RecipeGridScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) -> Un
             color = MaterialTheme.colorScheme.surface
         )
         Box(modifier = Modifier.weight(1f)){
-            ListeRecettesScreen(viewModel, categorySelected = categorySelected,onRecipeClick = onRecipeClick)
+            ListeRecettesScreen(
+                viewModel = viewModel,
+                categorySelected = categorySelected,
+                selectedIngredients = selectedIngredients,
+                onRecipeClick = onRecipeClick
+            )
         }
+    }
+    if (showIngredientFilter){
+        IngredientsFilterWindow(
+            ingredients = availableIngredients,
+            selectedIngredients = selectedIngredients,
+            onToggleIngredient = { ingredient ->
+                selectedIngredients = if (ingredient in selectedIngredients){
+                    selectedIngredients - ingredient
+                }
+                else{
+                    selectedIngredients + ingredient
+                }
+            },
+            onDismiss = {showIngredientFilter = false}
+        )
     }
 }
 
 @Composable
-fun Title(modifier: Modifier = Modifier) {
-    var showIngredientsFilter by remember { mutableStateOf(false)}
+fun Title(selectedIngredientsCount: Int, onFilterClick: () -> Unit, modifier: Modifier = Modifier) {
+    //var showIngredientsFilter by remember { mutableStateOf(false)}
     Column {
         Text(
             text = "Mon Carnet de".uppercase(),
@@ -96,12 +149,7 @@ fun Title(modifier: Modifier = Modifier) {
                 style= MaterialTheme.typography.displayLarge,
                 color = MaterialTheme.colorScheme.onBackground
             )
-            IngredientsButton(onClick={showIngredientsFilter=true})
-        }
-        if (showIngredientsFilter){
-            IngredientsFilterWindow(
-                onDismiss = { showIngredientsFilter = false }
-            )
+            IngredientsButton(selectedCount = selectedIngredientsCount, onClick = onFilterClick)
         }
     }
 }
@@ -123,14 +171,23 @@ fun CategoryList(categorySelected: String, onCategorySelected: (String) -> Unit)
 }
 
 @Composable
-fun ListeRecettesScreen(viewModel: RecetteViewModel, categorySelected: String, onRecipeClick: (Recette) -> Unit){
+fun ListeRecettesScreen(
+    viewModel: RecetteViewModel,
+    categorySelected: String,
+    selectedIngredients: Set<String>,
+    onRecipeClick: (Recette) -> Unit
+){
     val recettes by viewModel.recettes.collectAsState()
-    val recettesFiltrees = if(categorySelected == "Tout"){
-        recettes
-    }
-    else{
-        recettes.filter{it.categorie == categorySelected}
-    }
+    val recettesFiltrees = recettes
+        .filter { categorySelected == "Tout" || it.categorie == categorySelected}
+        .filter { recette ->
+            selectedIngredients.isEmpty() || selectedIngredients.all {selected ->
+                recette.ingredients.any{
+                    normalizeIngredientKey(it.ingredient) == normalizeIngredientKey(selected)
+                }
+            }
+        }
+
     LazyVerticalGrid (
         columns = GridCells.Fixed(2),
         modifier = Modifier.fillMaxWidth(),
