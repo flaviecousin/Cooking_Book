@@ -20,7 +20,18 @@ class RecetteViewModel(private val repository: RecetteRepository) : ViewModel() 
             }
             catch (e: Exception){
                 e.printStackTrace()
-                // gérer le message d'erreur (plus tard)
+            }
+        }
+    }
+
+    fun supprimerRecette(recette: Recette, onSuccess: () -> Unit = {}){
+        viewModelScope.launch {
+            try{
+                repository.delete(recette)
+                onSuccess()
+            }
+            catch (e: Exception){
+                e.printStackTrace()
             }
         }
     }

@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -23,6 +24,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
@@ -246,7 +248,7 @@ fun RecipeScreen(
     val graphicsLayer = rememberGraphicsLayer()
     val scope = rememberCoroutineScope()
     var showFormatDialog by remember { mutableStateOf(false) }
-    var isCapturing by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     BackHandler(onBack = onBack)
 
@@ -276,7 +278,7 @@ fun RecipeScreen(
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
-                    IconButton(onClick = onDelete) {
+                    IconButton(onClick = { showDeleteDialog = true }) {
                         Icon(
                             imageVector = FluentuiSystemIconsDelete,
                             contentDescription = "Supprimer la recette",
@@ -345,6 +347,26 @@ fun RecipeScreen(
                                 android.widget.Toast.LENGTH_LONG
                                 ).show()
                             }
+                        }
+                    }
+                )
+            }
+            if (showDeleteDialog){
+                AlertDialog(
+                    onDismissRequest = {showDeleteDialog = false},
+                    title = { Text("Supprimer la recette ?") },
+                    text = { Text("Cette action est irréversible. Voulez-vous vraiment supprimer \$titre\" ?")},
+                    confirmButton = {
+                        TextButton(onClick = {
+                            showDeleteDialog = false
+                            onDelete()
+                        }) {
+                            Text("Supprimer")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = {showDeleteDialog = false}) {
+                            Text("Annuler")
                         }
                     }
                 )

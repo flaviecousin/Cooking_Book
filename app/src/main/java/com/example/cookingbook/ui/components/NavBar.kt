@@ -63,7 +63,9 @@ fun NavigationHost(
                     nbPers = recette.people,
                     img = recette.image,
                     onDelete = {
-                        // A faire
+                        viewModel.supprimerRecette(recette){
+                            navController.popBackStack()
+                        }
                     },
                     onModification = {
                         // A faire
