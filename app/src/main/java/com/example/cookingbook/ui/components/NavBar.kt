@@ -63,10 +63,12 @@ fun NavigationHost(
                     nbPers = recette.people,
                     img = recette.image,
                     onDelete = {
-                        // A faire
+                        viewModel.supprimerRecette(recette){
+                            navController.popBackStack()
+                        }
                     },
                     onModification = {
-                        // A faire
+                        navController.navigate("recipe_edit/${recette.id}")
                     },
                     onBack = {
                         navController.popBackStack()
@@ -76,6 +78,16 @@ fun NavigationHost(
                     conseils = recette.conseils
                 )
             }
+        }
+        composable("recipe_edit/{recipeId}") { backStackEntry ->
+            val recipeId = backStackEntry.arguments?.getString("recipeId")?.toLongOrNull()
+            val recettes by viewModel.recettes.collectAsState()
+            val recette = recettes.find{it.id == recipeId}
+            AddScreen(
+                viewModel = viewModel,
+                recetteExistante = recette,
+                onSave = {navController.popBackStack()}
+            )
         }
         composable (Destination.AJOUTER.route){
             AddScreen(viewModel)

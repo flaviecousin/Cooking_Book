@@ -47,8 +47,13 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddScreen(viewModel: RecetteViewModel){
-    var newRecipe by remember { mutableStateOf(recetteVide()) }
+fun AddScreen(
+    viewModel: RecetteViewModel,
+    recetteExistante: Recette? = null,
+    onSave: () -> Unit = {}
+){
+    var newRecipe by remember { mutableStateOf(recetteExistante ?: recetteVide()) }
+    val isEditMode = recetteExistante != null
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
@@ -60,7 +65,7 @@ fun AddScreen(viewModel: RecetteViewModel){
                 colors = topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
                 ),
-                title = {TitleScreen()},
+                title = {TitleScreen(isEditMode = isEditMode)},
             )
         },
         bottomBar = {
@@ -72,10 +77,20 @@ fun AddScreen(viewModel: RecetteViewModel){
                     contentAlignment = Alignment.Center,
                 ){
                     SavingButton(onClick = {
-                        viewModel.ajouterRecette(newRecipe){
-                            newRecipe = recetteVide()
-                            coroutineScope.launch {
-                                snackbarHostState.showSnackbar("La recette a bien été enregistrée !")
+                        if (isEditMode){
+                            viewModel.modifierRecette(newRecipe){
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar("La recette a bien été modifiée !")
+                                }
+                                onSave()
+                            }
+                        }
+                        else{
+                            viewModel.ajouterRecette(newRecipe){
+                                newRecipe = recetteVide()
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar("La recette a bien été enregistrée !")
+                                }
                             }
                         }
                     })
@@ -83,7 +98,6 @@ fun AddScreen(viewModel: RecetteViewModel){
             }
         }
     ) { innerPadding ->
-        //modifier = Modifier.horizontalScroll(rememberScrollState())
         Column(modifier = Modifier
             .padding(innerPadding)
             .verticalScroll(rememberScrollState())
@@ -124,16 +138,16 @@ fun AddScreen(viewModel: RecetteViewModel){
 }
 
 @Composable
-fun TitleScreen(modifier: Modifier = Modifier) {
+fun TitleScreen(modifier: Modifier = Modifier, isEditMode: Boolean = false) {
     Column {
         Text(
-            text = "Nouveau".uppercase(),
+            text = (if (isEditMode) "Modifier" else "Nouveau").uppercase(),
             modifier = modifier,
             style= MaterialTheme.typography.displayMedium,
             color = MaterialTheme.colorScheme.onPrimaryContainer
         )
         Text(
-            text = "Ajouter une recette",
+            text = if (isEditMode) "Modifier la recette" else "Ajouter une recette",
             modifier = modifier,
             style= MaterialTheme.typography.displaySmall,
             color = MaterialTheme.colorScheme.onBackground

@@ -7,4 +7,6 @@ class RecetteRepository(private val dao: RecetteRequests) {
 
     suspend fun insert(recette: Recette) = dao.insert(recette)
     suspend fun delete(recette: Recette) = dao.delete(recette)
+
+    suspend fun update(recette:Recette) = dao.update(recette)
 }
