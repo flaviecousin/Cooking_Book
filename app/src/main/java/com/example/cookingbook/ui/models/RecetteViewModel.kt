@@ -35,4 +35,16 @@ class RecetteViewModel(private val repository: RecetteRepository) : ViewModel() 
             }
         }
     }
+
+    fun modifierRecette(recette: Recette, onSuccess: () -> Unit = {}){
+        viewModelScope.launch {
+            try{
+                repository.update(recette)
+                onSuccess()
+            }
+            catch (e: Exception){
+                e.printStackTrace()
+            }
+        }
+    }
 }
