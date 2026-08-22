@@ -5,20 +5,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class FilterTextViewModel : ViewModel(){
-    private val items = listOf(
-        "Gâteau",
-        "Tarte",
-        "Brioche",
-        "Viande",
-        "Poisson",
-        "Barbecue"
-    )
-    private val _filteredItems = MutableStateFlow(items)
-    var filteredItems: StateFlow<List<String>> = _filteredItems
+    private var allTitles: List<String> = emptyList()
+    private val _filteredItems = MutableStateFlow<List<String>>(emptyList())
+    val filteredItems: StateFlow<List<String>> = _filteredItems
 
+    fun setTitles(titles: List<String>){
+        allTitles = titles
+    }
     fun filterText(input: String){
-        _filteredItems.value = items.filter{
-            it.contains(input, ignoreCase = true)
+        _filteredItems.value = if (input.isBlank()) {
+            emptyList()
+        }
+        else{
+            allTitles.filter{ it.contains(input, ignoreCase = true) }
         }
     }
 }
