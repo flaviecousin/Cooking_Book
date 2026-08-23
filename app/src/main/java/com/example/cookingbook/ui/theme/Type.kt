@@ -1,78 +1,63 @@
 package com.example.cookingbook.ui.theme
 
 import androidx.compose.material3.Typography
-import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontSynthesis
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.sp
 import com.example.cookingbook.R
 
-// Set of Material typography styles to start with
+/**
+ Serif family used for all display/title styles below (recipe titles, section headers).
+ */
 val PlayfairDisplay = FontFamily(
-    Font(
-        R.font.playfair_display_bold,
-        FontWeight.Bold,
-        FontStyle.Normal
-    ),
-    Font(
-        R.font.playfair_display_bold_italic,
-        FontWeight.Bold,
-        FontStyle.Italic
-    ),
-    Font(
-        R.font.playfair_display_italic,
-        FontWeight.Normal,
-        FontStyle.Italic
-    ),
-    Font(
-        R.font.playfair_display_regular,
-        FontWeight.Normal,
-        FontStyle.Normal
-    )
+    Font(resId = R.font.playfair_display_bold, weight = FontWeight.Bold, style = FontStyle.Normal),
+    Font(resId = R.font.playfair_display_bold_italic, weight = FontWeight.Bold, style = FontStyle.Italic),
+    Font(resId = R.font.playfair_display_italic, weight = FontWeight.Normal, style = FontStyle.Italic),
+    Font(resId = R.font.playfair_display_regular, weight = FontWeight.Normal, style = FontStyle.Normal)
 )
 
+/**
+Monospace-style family used for body text, labels, and form values.
+ */
 val DSETypewriter = FontFamily(
-    Font(
-        R.font.dse_typewriter,
-        FontWeight.Normal,
-        FontStyle.Normal
-    )
+    Font(resId = R.font.dse_typewriter, weight = FontWeight.Normal, style = FontStyle.Normal)
 )
+
+/**
+ * App-wide [Typography]. Comments below describe actual usage found in the shared code.
+ */
 val Typography = Typography(
-    // Display2XL
+    // Big page/recipe titles: "Recettes" (grid screen), recipe title on the hero image
     displayLarge = TextStyle(
         fontFamily = PlayfairDisplay,
         fontWeight = FontWeight.SemiBold,
         fontSize = 32.sp,
         lineHeight = 34.sp
     ),
-    // Display2XL Version 2
-    displaySmall = TextStyle(
-        fontFamily = PlayfairDisplay,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 32.sp,
-        lineHeight = 90.sp
-    ),
-    // DisplayLG : titre recette (détails) + "Ajouter une recette"
+
+    // Subheadings: "ajouter une recette", "Mon Carnet de", "Pour X personnes", "Etape par étape"
     displayMedium = TextStyle(
         fontFamily = PlayfairDisplay,
         fontWeight = FontWeight.W600,
         fontSize = 18.sp,
         lineHeight = 28.sp
     ),
-    //h3 : titre de carte dans la grille
+
+    //Recipe card title in the grid (RecipeCard.kt)
     titleLarge = TextStyle(
         fontFamily = PlayfairDisplay,
         fontWeight = FontWeight.W600,
         fontSize = 18.sp,
         lineHeight = 24.sp
     ),
-    // label
+
+    /* Uppercase section labels/eyebrows: used very broadly (chips, field, labels,
+    "Ingrédients"/"Préparation" headers, card category text, NumberCard labels, "Nouveau" eyebrow)
+     */
     labelLarge = TextStyle(
         fontFamily = DSETypewriter,
         fontSynthesis = FontSynthesis.Weight,
@@ -80,9 +65,9 @@ val Typography = Typography(
         fontSize = 15.sp,
         lineHeight = 18.sp,
         letterSpacing = 0.6.sp
-        // uppercase
     ),
-    // body : texte des ingrédients, valeurs des champs
+
+    // Advice/tips paragraph text (AdviceCard)
     bodyLarge = TextStyle(
         fontFamily = DSETypewriter,
         fontSynthesis = FontSynthesis.Weight,
@@ -90,7 +75,10 @@ val Typography = Typography(
         fontSize = 14.sp,
         lineHeight = 20.sp,
     ),
-    // body : texte des ingrédients, valeurs des champs
+
+    /* Despite the name, mostly used as a button/label: chip text, SavingButton, IngredientsButton,
+    step-number and time-value digits (WidgetSteps, NumberCard, EachStep)
+     */
     bodySmall = TextStyle(
         fontFamily = DSETypewriter,
         fontSynthesis = FontSynthesis.Weight,
@@ -98,7 +86,8 @@ val Typography = Typography(
         fontSize = 14.sp,
         lineHeight = 20.sp,
     ),
-    // bodyMuted : placeholders, "Depuis la galerie..."
+
+    // Text field placeholders app-wide, and WidgetImg's helper caption
     bodyMedium = TextStyle(
         fontFamily = DSETypewriter,
         fontSynthesis = FontSynthesis.Weight,
@@ -107,7 +96,8 @@ val Typography = Typography(
         lineHeight = 20.sp,
         color = GreyPink
     ),
-    // caption : métadonnées cartes (temps, personne)
+
+    // Small field labels above time inputs ("Préparation"/"Cuisson"/"Repos")
     labelMedium = TextStyle(
         fontFamily = DSETypewriter,
         fontSynthesis = FontSynthesis.Weight,
@@ -116,7 +106,8 @@ val Typography = Typography(
         lineHeight = 16.sp,
         color = GreyPink
     ),
-    // caption : métadonnées cartes (temps, personne)
+
+    // Default color is overridden where used on dark card backgrounds (RecipeCard's time/servings text)
     labelSmall = TextStyle(
         fontFamily = DSETypewriter,
         fontSynthesis = FontSynthesis.Weight,

@@ -2,9 +2,27 @@ package com.example.cookingbook.ui.theme
 
 import androidx.compose.ui.unit.dp
 
+/**
+ * Corner radius scale. Note: based on the shared code, [lg] is currently only applied to
+ * [com.example.cookingbook.ui.components.RecipeCard] (the photo picker (WidgetImg) actually uses [sm],
+ * and the recipe detail hero image isn't clipped/rounded at all.)
+ */
 object Radius {
-    val sm = 6.dp // petits éléments (inputs de temps)
-    val md = 12.dp // boutons, champs de saisie, dropdown
-    val lg = 20.dp // cartes de recette (grille), placeholder photo, bloc image détail
-    val pill = 999.dp // chips de catégorie, boutton stepper(+/-), bouton "Ingrédients", bouton "Partager", CTA principal
+    // Photo picker button (WidgetImg), small info cards (NumberCard)
+    val sm = 6.dp
+
+    /*
+    Text fields, dropdowns, buttons (InputTexte, AddIngredient, AddStepsRecipe, InputCategories,
+    InputTimes, SavingButton, AdviceCard, TotalTimeCard)
+     */
+    val md = 12.dp
+
+    // Recipe grid card corners (RecipeCard)
+    val lg = 20.dp
+
+    /*
+    Fully rounded: category chips, "Ingredients" filter button, "Add" button (ChipCategory,
+    IngredientsButton, AddButton)
+     */
+    val pill = 999.dp
 }
