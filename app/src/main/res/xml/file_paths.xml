@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    FileProvider path config used to share generated recipe exports (PNG/PDF) via content:// URIs.
+    Referenced by the <provider> declared in AndroidManifest.xml, and consumed by ShareFormat.kt when
+    it saves files to context.cacheDir before sharing/opening them.
+-->
 <paths>
+    <!-- Matches File(context.cacheDire, "images") in ShareFormat.kt (saveAsImage) -->
     <cache-path name="images" path="images/"/>
+    <!-- Matches File(context.cacheDir, "pdfs") in ShareFormat.kt (saveAsPdf) -->
     <cache-path name="pdfs" path="pdfs/"/>
 </paths>
