@@ -45,6 +45,25 @@ import com.example.cookingbook.ui.models.RecetteViewModel
 import com.example.cookingbook.ui.theme.Spacing
 import kotlinx.coroutines.launch
 
+/**
+ * Add/edit recipe form. The same composable and the same local [newRecipe] form state serve both flows
+ * (the screen behaves as an editor when [recetteExistante] is non-null, and as a blank creation form
+ * otherwise).
+ *
+ * Behavioral difference between the 2 modes, both driven by [isEditMode]:
+ * - **Create** ('recetteExistante == null'): saving calls [RecetteViewModel.ajouterRecette], resets
+ * the form back to [recetteVide], shows a confirmation snackbar, and stays on this screen (no navigation)
+ * so another recipe can be added right away.
+ * - **Edit** ('recetteExistante != null'): saving calls [RecetteViewModel.modifierRecette], shows a
+ * confirmation snackbar, and invokes [onSave] (used by the caller to navigate back to the recipe
+ * detail screen). The form is **not** reset in this case, since the screen is expected to be left
+ * immediately after.
+ *
+ * @param viewModel used to persist the new or edited recipe.
+ * @param recetteExistante the recipe being edited, or 'null' to create a new one from scratch.
+ * @param onSave invoked after a successful edit-mode save, typically to navigate back. Not called
+ * after a create-mode save.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddScreen(
@@ -115,7 +134,7 @@ fun AddScreen(
                 InputCategories(value = newRecipe.categorie, onValueChange = {newRecipe = newRecipe.copy(categorie = it)})
                 NumberPeopleInput(value = newRecipe.people, onValueChange = {newRecipe = newRecipe.copy(people = it)})
 
-                // Gestion des différents temps de la recette
+                // Time fields (prep / cook / rest)
                 Text(
                     text = "Temps (en minutes)".uppercase(),
                     style = MaterialTheme.typography.labelLarge,
@@ -137,6 +156,13 @@ fun AddScreen(
     }
 }
 
+/**
+ * Top bar title for [AddScreen], swapping its copy between create and edit mode ("Nouveau" / "Ajouter
+ * une recette" vs "Modifier" / "Modifier la recette").
+ *
+ * @param isEditMode whether the screen is currently editing an existing recipe rather than creating
+ * a new one.
+ */
 @Composable
 fun TitleScreen(modifier: Modifier = Modifier, isEditMode: Boolean = false) {
     Column {
@@ -155,6 +181,12 @@ fun TitleScreen(modifier: Modifier = Modifier, isEditMode: Boolean = false) {
     }
 }
 
+/**
+ * Builds a blank [Recette] used as the initial/reset state of the add form: empty title/image/advice,
+ * a default category of "Desserts", 4 servings, zeroed times, and a single empty ingredient/step
+ * placeholder so the dynamic list widgets (see 'AddIngredient.kt', 'AddStepsRecipe.kt') always start
+ * with one editable row.
+ */
 fun recetteVide() = Recette(
     image = "",
     titre = "",

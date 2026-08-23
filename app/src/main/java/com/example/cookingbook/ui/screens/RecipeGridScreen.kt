@@ -40,6 +40,14 @@ import com.example.cookingbook.ui.data.Recette
 import com.example.cookingbook.ui.models.RecetteViewModel
 import com.example.cookingbook.ui.theme.Spacing
 
+/**
+ * Normalizes an ingredient name for comparison/deduplication purposes: trims whitespaces, lowercases,
+ * and strips a trailing "s" or "x" so that simple singular/plural variants (e.g. "tomate" / "tomates")
+ * are treated as the same ingredient. This is a naive heuristic (it does not handle irregular plurals).
+ *
+ * @param name the raw ingredient name as entered by the user.
+ * @return a normalized key suitable for grouping/equality checks.
+ */
 private fun normalizeIngredientKey(name: String): String{
     val lower = name.trim().lowercase()
     return when{
@@ -47,6 +55,26 @@ private fun normalizeIngredientKey(name: String): String{
         else -> lower
     }
 }
+
+/**
+ * Main recipe browsing screen: search bar, category chip filter, and an ingredient-based filter, on
+ * top of the 2-column recipe grid.
+ *
+ * State owned here :
+ * - [categorySelected]: the currently active category chip (defaults to "Tout").
+ * - [selectedIngredients]: the set of ingredient names the user has chosen to filter by (via [IngredientsFilterWindow])
+ *
+ * The list of ingredients offered in the filter ([availableIngredients]) is derived from all recipes'
+ * ingredients, deduplicated case-insensitivity and across simple singular/plural variants via
+ * [normalizeIngredientKey] (for each group of variants, the shortest one is kept as the display label).
+ *
+ * A [LaunchedEffect] keyed on [availableIngredients] prunes [selectedIngredients] whenever a
+ * previously-selected ingredient stops existing (e.g. the recipe that used it was edited or deleted),
+ * so the filter never silently references as a stale ingredient.
+ *
+ * @param viewModel supplies the recipe list ([RecetteViewModel.recettes]).
+ * @param onRecipeClick invoked with the tapped [Recette] to navigate to its detail screen.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeGridScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) -> Unit){
@@ -56,7 +84,7 @@ fun RecipeGridScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) -> Un
     val focusManager = LocalFocusManager.current
     val recettes by viewModel.recettes.collectAsState()
 
-    // Liste dynamique et dédupliquée (insensible à la casse) de tous les ingrédients existants
+    // Dynamic, deduplicated (case-insensitive) list of every ingredient in use
     val availableIngredients = remember(recettes){
         recettes
             .flatMap { it.ingredients }
@@ -66,7 +94,7 @@ fun RecipeGridScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) -> Un
             .map { (_, variantes) -> variantes.minBy { it.length } }
             .sortedBy { it.lowercase() }
     }
-    // Si un ingrédient sélectionné disparaît (recette modifiée/supprimée), on nettoit la sélection
+    // If a selected ingredient disappears (recipe edited/deleted), clean up the selection
     LaunchedEffect(availableIngredients) {
         val availableSet = availableIngredients.toSet()
         if (!availableSet.containsAll(selectedIngredients)){
@@ -128,6 +156,14 @@ fun RecipeGridScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) -> Un
     }
 }
 
+/**
+ * Screen title header ("Mon Carnet de / Recettes") plus the ingredient filter entry point, which
+ * displays [selectedIngredientsCount] as a badge on [IngredientsButton]
+ *
+ * @param selectedIngredientsCount number of ingredients currently selected in the filter, shown on
+ * the filter button.
+ * @param onFilterClick invoked when te filter button is tapped, to open [IngredientsFilterWindow].
+ */
 @Composable
 fun Title(selectedIngredientsCount: Int, onFilterClick: () -> Unit, modifier: Modifier = Modifier) {
     //var showIngredientsFilter by remember { mutableStateOf(false)}
@@ -154,6 +190,14 @@ fun Title(selectedIngredientsCount: Int, onFilterClick: () -> Unit, modifier: Mo
     }
 }
 
+/**
+ * Horizontally scrollable row of category chips to filter the recipe grid. The category list is
+ * currently hardcoded here rather than shared with [com.example.cookingbook.ui.components.InputCategories]
+ * 'categories' list.
+ *
+ * @param categorySelected the currently active category.
+ * @param onCategorySelected invoked with the tapped category's label.
+ */
 @Composable
 fun CategoryList(categorySelected: String, onCategorySelected: (String) -> Unit){
     val categories = listOf("Tout", "Entrées", "Plats", "Desserts", "Pains", "Boissons", "A tester","Pas chères et faciles", "BBQ", "Noël/Festif")
@@ -170,6 +214,17 @@ fun CategoryList(categorySelected: String, onCategorySelected: (String) -> Unit)
     }
 }
 
+/**
+ * Renders the filtered recipe grid: recipes are kept if they match he selected category (or "Tout")
+ * **and** contain every ingredient in [selectedIngredients] (ingredient matching goes through
+ * [normalizeIngredientKey], so singular/plural variants of a filter match recipes using either form).
+ * An empty [selectedIngredients] set applies no ingredient filter.
+ *
+ * @param viewModel supplies the recipe list.
+ * @param categorySelected active category filter, or "Tout" for no filter.
+ * @param selectedIngredients ingredients that must all be present in a recipe for it to be shown.
+ * @param onRecipeClick invoked with the tapped [Recette]
+ */
 @Composable
 fun ListeRecettesScreen(
     viewModel: RecetteViewModel,

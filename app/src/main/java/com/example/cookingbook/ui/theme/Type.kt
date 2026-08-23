@@ -39,6 +39,14 @@ val Typography = Typography(
         lineHeight = 34.sp
     ),
 
+    // Defined with a 90sp line height; no confirmed usage in the shared code (possibly leftover from an earlier iteration)
+    displaySmall = TextStyle(
+        fontFamily = PlayfairDisplay,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 32.sp,
+        lineHeight = 90.sp
+    ),
+
     // Subheadings: "ajouter une recette", "Mon Carnet de", "Pour X personnes", "Etape par étape"
     displayMedium = TextStyle(
         fontFamily = PlayfairDisplay,
