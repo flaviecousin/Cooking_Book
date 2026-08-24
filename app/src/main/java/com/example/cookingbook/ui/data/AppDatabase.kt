@@ -6,14 +6,36 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
+/**
+ * Room database for the app, holding a single 'recettes' table backed by [Recette]. Complex fields
+ * ([Recette.ingredients], [Recette.instructions]) are persisted as JSON via [Converters].
+ *
+ * Accessed exclusively through the thread-safe singleton [getDatabase] (there is no public constructor,
+ * so all callers share the same underlying SQLite connection).
+ *
+ * 'exportSchema = false' means no schema history is exported to a JSON file for migration tooling;
+ * acceptable for a single-version, no-backend app, but worth revisiting if a schema migration is
+ * ever needed.
+ */
 @Database(entities = [Recette::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase(){
+
+    /** Provides access to recipe queries; see [RecetteRequests]. */
     abstract fun recetteDao(): RecetteRequests
 
     companion object{
         @Volatile private var INSTANCE: AppDatabase? = null
 
+        /**
+         * Returns the app-wide singleton [AppDatabase] instance, creating it on first call.
+         * Double-checked locking ('@Volatile' + 'synchronized') ensures only one instance is ever
+         * built even if called concurrently from multiple threads.
+         *
+         * @param context any context; only [Context.getApplicationContext] is retained, avoiding
+         * leaking a shorter-lived context (e.g. an Activity).
+         * @return the shared [AppDatabase] instance, backed by the 'recettes_database' SQLite file.
+         */
         fun getDatabase(context: Context): AppDatabase{
             return INSTANCE ?: synchronized(this){
                 val  instance = Room.databaseBuilder(
