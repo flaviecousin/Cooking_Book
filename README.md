@@ -4,4 +4,5 @@
 
 - Using Hilt with Database
 - Using a class, enum or something global for category instead of writing them in the code
+- Building the numbered badge in [AddStepsRecipe.kt]'s WidgetSteps() with something more appropriate (currently using [Button])
 - 
