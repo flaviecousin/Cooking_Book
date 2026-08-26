@@ -18,10 +18,18 @@ import com.example.cookingbook.ui.icons.HeroiconsPlus
 import com.example.cookingbook.ui.icons.RadixMinus
 import com.example.cookingbook.ui.theme.Spacing
 
+/**
+ * Stepper control for the recipe's servings count, used in the add/edit form. Clamped between '1' and
+ * '1000' (both buttons disable themselves automatically at their respective bound rather than wrapping
+ * or clamping silently).
+ *
+ * @param value the current servings count.
+ * @param onValueChange invoked with the new count after a tap in either button; never called if the
+ * tap would go out of bounds.
+ */
 @Composable
 fun NumberPeopleInput(value: Int, onValueChange: (Int) -> Unit){
-    //var count by remember { mutableIntStateOf(4) }
-    val minValue = 0
+    val minValue = 1
     val maxValue = 1000
 
     Column(modifier = Modifier.fillMaxWidth()){

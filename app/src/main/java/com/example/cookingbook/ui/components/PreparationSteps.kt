@@ -20,9 +20,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.cookingbook.ui.data.Preparation
 import com.example.cookingbook.ui.theme.Spacing
-import kotlin.Int
-import kotlin.String
 
+/**
+ * Read-only display of a recipe's preparation steps, shown in the recipe detail screen (counterpart
+ * to the editable [AddSteps] in 'AddStepsRecipe.kt').
+ *
+ * @param preparation the steps to display, rendered in list order (not re-sorted by [Preparation.numero],
+ * so callers are expected to already pass them in the intended order).
+ */
 @Composable
 fun StepsList(preparation: List<Preparation>){
     Column(modifier = Modifier.padding(Spacing.sm)){
@@ -36,6 +41,12 @@ fun StepsList(preparation: List<Preparation>){
     }
 }
 
+/**
+ * A single read-only step row: a numbered circular badge followed by the instruction text.
+ *
+ * @param number the step's display number, shown inside the badge.
+ * @param step the step's instruction text.
+ */
 @Composable
 fun EachStep(number: Int, step: String){
     Row(modifier = Modifier

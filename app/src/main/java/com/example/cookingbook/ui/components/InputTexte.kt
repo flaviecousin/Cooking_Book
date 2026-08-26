@@ -11,18 +11,23 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.Spacing
 
+/**
+ * Generic labeled single-line text field, reused across the add/edit recipe form for both the recipe
+ * title and the "Conseils & Avis" notes fiels (see 'AddScreen.kt'). Purely controlled: holds no state
+ * of its own beyond the text field's built-in editing behavior.
+ *
+ * @param texte the field's section label, shown uppercased above the input.
+ * @param labelTexte placeholder text shown when [value] is empty.
+ * @param value the field's current text.
+ * @param onValueChange invoked with the new text on every keystroke.
+ */
 @Composable
 fun InputTexte(texte: String, labelTexte: String, value: String, onValueChange: (String) -> Unit){
-    //var text by rememberSaveable{ mutableStateOf("") }
     Column{
         Text(
             text = texte.uppercase(),
@@ -47,10 +52,6 @@ fun InputTexte(texte: String, labelTexte: String, value: String, onValueChange: 
                 disabledContainerColor = MaterialTheme.colorScheme.surface
             ),
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
-            // A ajouter si envie : icône permettant de supprimer le texte de l'input
-            /*trailingIcon = {
-                Icon(imageVector = VscodeCodiconsError ,contentDescription = "Supprimer la sélection")
-            }*/
         )
         Spacer(Modifier.height(Spacing.lg))
     }

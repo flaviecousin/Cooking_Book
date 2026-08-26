@@ -34,10 +34,26 @@ import com.example.cookingbook.ui.icons.RadixPeople
 import com.example.cookingbook.ui.theme.BrownCream
 import com.example.cookingbook.ui.theme.Purpley
 import com.example.cookingbook.ui.theme.Radius
-import com.example.cookingbook.ui.theme.RaspberryPink
 import com.example.cookingbook.ui.theme.RosyPowdered
 import com.example.cookingbook.ui.theme.Spacing
 
+/**
+ * Single recipe card shown in the 2-column recipe grid ([com.example.cookingbook.ui.screens.ListeRecettesScreen]).
+ * Displays the photo edge-to-edge with a bottom gradient scrim, plus category, title, total time, and
+ * servings overlaid at the bottom.
+ *
+ * If [img] is empty, the card simply renders as a flat [Purpley]-colored surface with no photo and
+ * no gradient. There is currently no dedicated placeholder illustration for recipes without a photo.
+ *
+ * @param titre recipe title; truncated to 2 lines with an ellipsis if too long.
+ * @param categorie recipe's category, shown uppercased above the title.
+ * @param tempsPrep preparation time in minutes, summed with the other 2 to compute the displayed total.
+ * @param tempsCuisson cooking time in minutes.
+ * @param tempsRepos resting time in minutes.
+ * @param nbPers number of servings.
+ * @param img path/URI to the recipe photo, or an empty string to render without one.
+ * @param onClick invoked when the card is tapped, typically to navigate to the recipe's detail screen.
+ */
 @Composable
 fun RecipeCard (titre: String, categorie: String, tempsPrep: Int, tempsCuisson: Int, tempsRepos:Int, nbPers: Int, img: String, onClick: () -> Unit){
     val tempsTotal = tempsCuisson + tempsPrep + tempsRepos
@@ -62,6 +78,7 @@ fun RecipeCard (titre: String, categorie: String, tempsPrep: Int, tempsCuisson: 
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Fit
                 )
+                // Bottom gradient scrim so the overlaid text stays legible over the photo
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -101,8 +118,7 @@ fun RecipeCard (titre: String, categorie: String, tempsPrep: Int, tempsCuisson: 
                         color = RosyPowdered
                     )
                     Icon(imageVector = BootstrapDot, contentDescription = "Point", modifier = Modifier.size(12.dp))
-                    //Spacer(modifier = Modifier.width(Spacing.xs))
-                    // Afficher le nombre de personnes
+                    // Displays the number of servings
                     Icon(imageVector = RadixPeople, contentDescription = "Nombre de personnes", modifier = Modifier.size(13.dp), tint = BrownCream)
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(
@@ -111,7 +127,6 @@ fun RecipeCard (titre: String, categorie: String, tempsPrep: Int, tempsCuisson: 
                         color = RosyPowdered
                     )
                 }
-                //Spacer(modifier = Modifier.height(Spacing.md))
             }
         }
     }

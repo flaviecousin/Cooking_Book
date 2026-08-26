@@ -19,6 +19,17 @@ import com.example.cookingbook.ui.theme.RaspberryPink
 import com.example.cookingbook.ui.theme.Spacing
 import androidx.compose.foundation.text.selection.SelectionContainer
 
+/**
+ * Card displaying a recipe's free-form notes/tips ([Recette.conseils]), shown in the "Conseils & avis"
+ * section of the recipe detail screen.
+ *
+ * The text is wrapped in a [SelectionContainer] so users can select and copy it (e.g. to paste a tip
+ * elsewhere), the only text in the recipe detail screen made explicitly selectable this way.
+ *
+ * @param advices the notes/tips text to display. An empty string still renders the card (with a
+ * bookmark icon and no visible text), rather than hiding the section, callers wanting to hide an empty
+ * advice section entirely would need to check [advices] before calling this.
+ */
 @Composable
 fun AdviceCard(advices: String){
     Card(

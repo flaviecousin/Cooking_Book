@@ -15,6 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.cookingbook.ui.icons.FeatherShare2
 
+/**
+ * Circular floating action button used as [com.example.cookingbook.ui.screens.RecipeScreen]'s share
+ * entry point, opening [ShareFormatDialog] when tapped.
+ *
+ * @param onClick invoked when the button is tapped.
+ */
 @Composable
 fun ShareButton(onClick: () -> Unit, modifier: Modifier = Modifier){
     Card(

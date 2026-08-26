@@ -11,8 +11,27 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 
+/**
+ * What to do with a recipe export once it's been generated: [SHARE] via the system share sheet, or
+ * [OPEN] directly via a matching app.
+ */
 enum class ShareAction {SHARE, OPEN}
 
+/**
+ * Dialog letting the user choose an export format ([ShareFormat.IMAGE] or [ShareFormat.PDF]) before
+ * sharing or opening a recipe export.
+ *
+ * Note the dialog's own confirm/dismiss buttons don't map to "confirm the choice" / "cancel" as their
+ * positions might suggest: the **confirm** button triggers [ShareAction.SHARE], while the **dismiss**
+ * button triggers [ShareAction.OPEN]. Both close the dialog and both invoke [onConfirm], just with
+ * a different [ShareAction]. There's no actual cancel/dismiss-without-action path other than tapping
+ * outside the dialog (which calls [onDismiss]).
+ *
+ * @param onDismiss invoked when the dialog is dismissed without a format action being chosen (tap
+ * outside, back gesture).
+ * @param onConfirm invoked with the selected [ShareFormat] and the chosen [ShareAction] once the user
+ * picks "Partager" or "Ouvrir".
+ */
 @Composable
 fun ShareFormatDialog(onDismiss: () -> Unit, onConfirm: (ShareFormat, ShareAction) -> Unit){
     var selectedFormat by remember { mutableStateOf(ShareFormat.IMAGE) }

@@ -20,6 +20,17 @@ import com.example.cookingbook.ui.icons.VscodeCodiconsCheck
 import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.Spacing
 
+/**
+ * Primary save action for the add/edit recipe form, pinned in [androidx.compose.material3.BottomAppBar]
+ * by 'AddScreen.kt'.
+ *
+ * The button's label always reads "Enregistrer la recette" regardless of whether the form is creating
+ * or editing. The create/edit distinction is only reflected elsewhere (the top bar title and the
+ * confirmation snackbar text in 'AddScreen.kt'), not on this button itself.
+ *
+ * @param onClick invoked when tapped; the caller decides whether this triggers a create or an update
+ * based on its own edit-mode state.
+ */
 @Composable
 fun SavingButton(onClick: () -> Unit){
     Button(

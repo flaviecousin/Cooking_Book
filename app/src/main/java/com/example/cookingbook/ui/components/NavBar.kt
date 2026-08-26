@@ -30,6 +30,26 @@ import com.example.cookingbook.ui.screens.AddScreen
 import com.example.cookingbook.ui.screens.RecipeGridScreen
 import com.example.cookingbook.ui.screens.RecipeScreen
 
+/**
+ * Declares the app's full navigation graph and wires each route to its screen composable and the
+ * [viewModel] callbacks it needs.
+ *
+ * Routes:
+ * - [Destination.RECETTES.route]: recipe grid; tapping a card navigates to 'recipe_detail/{id}'.
+ * - 'recipe_detail/{recipeId}': recipe detail screen. Looks up the matching [com.example.cookingbook.ui.data.Recette]
+ * from the current in-memory recipe list rather than querying the database directly (see
+ * [com.example.cookingbook.ui.data.RecetteRequests.getRecetteById], which is unused). Renders nothing
+ * if no recipe with that id is found (e.g. it was just deleted). Wired delete to [RecetteViewModel.supprimerRecette]
+ * followed by popping back, and edit to navigating into 'recipe_edit/{id}'.
+ * - 'recipe_edit/{recipeId}': reuses [AddScreen] in edit mode by passing it the found
+ * [com.example.cookingbook.ui.data.Recette]; 'onSave' pops back to the detail screen.
+ * - [Destination.AJOUTER.route]: [AddScreen] in create mode (no existing recipe passed).
+ *
+ * @param navController controls the navigation stack; shared with [NavBar] so bottom nav taps and
+ * in-screen navigation actions stay in sync.
+ * @param startDestination the initial route shown on launch.
+ * @param viewModel supplies recipe data and read/write operations to every screen in the graph.
+ */
 @Composable
 fun NavigationHost(
     navController: NavHostController,
@@ -95,6 +115,18 @@ fun NavigationHost(
     }
 }
 
+/**
+ * App shell: bottom [NavigationBar] plus the [NavigationHost] it drives.
+ * The single entry point mounted by [com.example.cookingbook.MainActivity].
+ *
+ * [selectedDestination] tracks which bottom tab is highlighted, saved across process death via
+ * [rememberSaveable]. Note it's only updated when a bottom nav item is tapped directly. Navigating
+ * via other means (e.g. a recipe card, or popping back from the detail/edit screens) does not resync
+ * it, so the highlighted tab can, in principle, become out of sync with the actually visible screen
+ * if navigation happens through routes outside the bottom bar.
+ *
+ * @param viewModel passed straight through to [NavigationHost].
+ */
 @Composable
 fun NavBar(viewModel: RecetteViewModel, modifier: Modifier = Modifier){
     val navController = rememberNavController()

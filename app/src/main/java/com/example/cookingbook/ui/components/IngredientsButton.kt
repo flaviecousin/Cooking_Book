@@ -28,6 +28,16 @@ import com.example.cookingbook.ui.icons.FeatherFilter
 import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.Spacing
 
+/**
+ * Entry point for the ingredient filter, shown in the recipe grid's header (see 'Title' in 'RecipeGridScreen.kt').
+ * Visually reflects filter state: it switches to the 'primaryContainer' color and appends a live count
+ * (e.g. "Ingrédients (3)") as soon as at least one ingredient is selected, so the active filter is
+ * visible without opening the sheet.
+ *
+ * @param selectedCount number of ingredients currently selected in the filter; '0' renders the button
+ * in its neutral/inactive state.
+ * @param onClick invoked when tapped, to open [IngredientsFilterWindow].
+ */
 @Composable
 fun IngredientsButton(selectedCount: Int, onClick: () -> Unit){
     Button(
@@ -47,6 +57,22 @@ fun IngredientsButton(selectedCount: Int, onClick: () -> Unit){
     }
 }
 
+/**
+ * Bottom sheet listing every ingredient currently in use across all recipes (as computed by
+ * [com.example.cookingbook.ui.screens.RecipeGridScreen]), each with a checkbox to toggle it as an
+ * active filter. Purely presentational/controlled: all selection state is owned by the caller.
+ *
+ * Show a dedicated empty-state message rather than an empty list when [ingredients] is empty (i.e.
+ * no recipe has any ingredient recorded yet).
+ *
+ * @param ingredients the full set of filterable ingredient names, already deduplicated and normalized
+ * by the caller.
+ * @param selectedIngredients the subset of [ingredients] currently active as filters, used to render
+ * each row's checkbox state.
+ * @param onToggleIngredient invoked with an ingredient name when its checkbox is tapped, regardless
+ * of whether that turns the filter on or off.
+ * @param onDismiss invoked when the sheet is dismissed (swipe down, scrim tap, or system back).
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IngredientsFilterWindow(

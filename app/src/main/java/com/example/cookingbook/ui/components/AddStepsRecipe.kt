@@ -31,6 +31,23 @@ import com.example.cookingbook.ui.icons.VscodeCodiconsError
 import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.Spacing
 
+/**
+ * A single editable preparation step row: a numbered circular badge, a text field for the step's
+ * instructions, and an optional delete button.
+ *
+ * Note the numbered badge is a [Button] with an [onClick] parameter, but [AddSteps] always passes
+ * an empty lambda for it (the badge is effectively non-interactive display-only in current usage,
+ * despite being built as a clickable component).
+ *
+ * @param labelNumber the step's 1-based display position, shown both on the badge and in the field's
+ * placeholder text. Not a stable identifier (see [AddSteps] for the actual identity key used).
+ * @param buttonShown whether the delete icon button is rendered. Hidden when only one step remains,
+ * so the list can never be emptied entirely.
+ * @param onDelete invoked when the delete icon is tapped.
+ * @param onClick invoked when the numbered badge is tapped (currently unused by callers).
+ * @param value the step's current instruction text.
+ * @param onValueChange invoked with the new instruction text on every keystroke.
+ */
 @Composable
 fun WidgetSteps(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Unit, onClick: () -> Unit,
                 value: String, onValueChange: (String) -> Unit){
@@ -85,6 +102,18 @@ fun WidgetSteps(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Unit, o
         }
     }
 }
+
+/**
+ * Editable list of a recipe's preparation steps, shown in the add/edit form. Mirrors [AddIngredients]'
+ * structure exactly, but keyed on [Preparation.numero] instead of ingredient id.
+ *
+ * New steps are appended with a 'numero' of 'max(existing numero) + 1' (falling back to '1' for an
+ * empty list). As with ingredients, this number is only unique within this single list and doubles
+ * as the stable Compose 'key' for each row.
+ *
+ * @param value the current step list (owned by the parent form state).
+ * @param onValueChange invoked with the full updated list on every add, edit or removal.
+ */
 @Composable
 fun AddSteps(value: List<Preparation>, onValueChange: (List<Preparation>) -> Unit){
 

@@ -26,6 +26,20 @@ import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.RaspberryPink
 import com.example.cookingbook.ui.theme.Spacing
 
+/**
+ * Small fixed-size metadata pill used in the recipe detail screen's time row (prep / cook / rest /
+ * servings, see 'RecipeContent' in 'RecipeScreen.kt'), showing an icon, a short label, and a value.
+ *
+ * The value's unit inferred from [text] rather than passed explicitly: every label except "Pers."
+ * gets " min" appended to [number]; "Pers." is shown as a bare number. This string-base branching is
+ * brittle (a typo or a translation of "Pers." would silently start appending "min" to a servings count)
+ * a dedicated unit/format parameter would be safer if this component grows more use cases.
+ *
+ * @param text short uppercase label (e.g. "Prép.", "Cuisson", "Repos", "Pers.").
+ * @param icone icon shown to the left of the label/value.
+ * @param textIcone accessibility description for [icone].
+ * @param number the value to display (minutes for time labels, a raw count for "Pers.").
+ */
 @Composable
 fun NumberCard(text: String, icone: ImageVector, textIcone: String, number: Int){
     OutlinedCard(
@@ -56,7 +70,7 @@ fun NumberCard(text: String, icone: ImageVector, textIcone: String, number: Int)
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 if (text != "Pers."){
-                    Text(text = number.toString() + " min",
+                    Text(text = "$number min",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onBackground
                     )

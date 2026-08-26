@@ -30,7 +30,12 @@ import com.example.cookingbook.ui.icons.VscodeCodiconsError
 import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.Spacing
 
-// ----------- BUTTON TO ADD A LINE OF INGREDIENTS -----------
+/**
+ * Small pill-shaped "Add" button, shared between the ingredients and preparation-steps sections of
+ * the add/edit recipe form (see [AddIngredients] and 'AddSteps' in 'AddStepsRecipe.kt').
+ *
+ * @param onClick invoked when the button is tapped; the caller decides what new empty item to append.
+ */
 @Composable
 fun AddButton (onClick : () -> Unit){
     FilledTonalButton(
@@ -44,7 +49,7 @@ fun AddButton (onClick : () -> Unit){
         Row(verticalAlignment = Alignment.CenterVertically){
             Icon(
                 imageVector = HeroiconsPlus,
-                contentDescription = "Icone plus",
+                contentDescription = "Icône plus",
                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier.height(14.dp))
             Spacer(Modifier.width(Spacing.xs))
@@ -56,6 +61,21 @@ fun AddButton (onClick : () -> Unit){
     }
 }
 
+/**
+ * A single editable ingredient row: a quantity field and a name field side by side, with an optional
+ * delete button. Purely presentational (all state lives in the caller ([AddIngredients])), which passes
+ * down the current values and receives change/delete callbacks.
+ *
+ * @param labelNumber the row's 1-based position, shown only in the fields' placeholder text (e.g.
+ * "Quantité n°2"), not a stable identifier (see [AddIngredients] for the actual identity key used).
+ * @param buttonShown whether the delete icon button is rendered. Callers hide it when only one row
+ * remains, so the list can never be emptied entirely.
+ * @param onDelete invoked when the delete icon is tapped.
+ * @param value the quantity field's current text.
+ * @param onValueChange invoked with the new quantity text on every keystroke.
+ * @param nameIngredient the ingredient name field's current text.
+ * @param onNameChange invoked with the new ingredient name on every keystroke.
+ */
 @Composable
 fun WidgetIngredient(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Unit,
                      value: String, onValueChange: (String) -> Unit,
@@ -64,7 +84,7 @@ fun WidgetIngredient(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Un
     Column {
         Spacer(Modifier.height(Spacing.sm))
         Row(modifier = Modifier.fillMaxWidth(),verticalAlignment = Alignment.CenterVertically) {
-            Icon(imageVector = BootstrapDot, contentDescription = "Icone point", tint = MaterialTheme.colorScheme.primary)
+            Icon(imageVector = BootstrapDot, contentDescription = "Icône point", tint = MaterialTheme.colorScheme.primary)
             Spacer(Modifier.width(Spacing.md))
             OutlinedTextField(
                 value=value,
@@ -102,7 +122,7 @@ fun WidgetIngredient(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Un
                 )
             )
             Spacer(Modifier.width(Spacing.md))
-            // Croix pour supprimer (c'est un bouton icône)
+            // Delete cross (icon button)
             if(buttonShown){
                 IconButton(
                     onClick = onDelete,
@@ -113,7 +133,20 @@ fun WidgetIngredient(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Un
         }
     }
 }
-// ----------- DISPLAY INGREDIENTS ON ADD SCREEN -----------
+
+/**
+ * Editable list of a recipe's ingredients, shown in the add/edit form.
+ * Owns the "add" and "remove" logic; each row's own field edits are delegated to [WidgetIngredient].
+ *
+ * New ingredients are appended with an 'id' of 'max(existing ids) + 1' (falling back to '1' for an
+ * empty list). ids are only ever unique within this single list, not globally, and are reused as the
+ * stable Compose 'key' for each row (via 'key(ingredient.id)') so text field focus and cursor position
+ * survive reordering/recomposition when other rows are added or removed.
+ *
+ * @param value the current ingredient list (owned by the parent from state).
+ * @param onValueChange invoked with the full updated list on every add, edit or removal (this composable
+ * holds no state of its own).
+ */
 @Composable
 fun AddIngredients(value: List<Ingredient>, onValueChange: (List<Ingredient>) -> Unit){
     Column{

@@ -29,11 +29,28 @@ import com.example.cookingbook.ui.data.copyImageToInternalStorage
 import com.example.cookingbook.ui.icons.FeatherCamera
 import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.Spacing
+import androidx.core.net.toUri
 
+/**
+ * Photo picker button used in [com.example.cookingbook.ui.screens.AddScreen] to attach a photo to a
+ * recipe. Doubles as both the empty-state prompt ("Add a photo") and the preview of the currently
+ * selected image, all within the same clickable surface (tapping it at any time re-opens the system
+ * photo picker to change the selection).
+ *
+ * On pick, the returned 'content://' URI is immediately copied into app internal storage via
+ * [copyImageToInternalStorage] so it survives across app restarts (see that function's docs for why).
+ * If the copy fails, [onValueChange] is simply never called and the previous [value] is kept (there's
+ * no error feedback shown to the user in that case).
+ *
+ * @param value the currently stored image path (an internal-storage file path, not the original picker
+ * URI), or an empty string if no photo has been set yet.
+ * @param onValueChange invoked with the new internal-storage file path once a picked image has been
+ * successfully copied.
+ */
 @Composable
 fun WidgetImg(value: String, onValueChange: (String) -> Unit){
     val context = LocalContext.current
-    val displayUri: Uri? = if (value.isNotEmpty()) Uri.parse(value) else null
+    val displayUri: Uri? = if (value.isNotEmpty()) value.toUri() else null
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null){
             val savedPath = copyImageToInternalStorage(context, uri)
@@ -54,7 +71,7 @@ fun WidgetImg(value: String, onValueChange: (String) -> Unit){
             modifier = Modifier.height((Spacing.xxxl)+80.dp).fillMaxWidth()
         ) {
             if (displayUri != null){
-                // Utilisation de Coil pour afficher l'image sélectionner
+                // Coil handles loading/caching the selected image
                 val painter = rememberAsyncImagePainter(
                     ImageRequest
                         .Builder(context)

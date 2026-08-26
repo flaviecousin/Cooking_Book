@@ -18,6 +18,12 @@ import com.example.cookingbook.ui.data.Ingredient
 import com.example.cookingbook.ui.icons.BootstrapDot
 import com.example.cookingbook.ui.theme.Spacing
 
+/**
+ * Read-only display of a recipe's ingredient list, shown in the recipe detail screen (as opposed to
+ * [AddIngredients], its editable counterpart in the add/edit form).
+ *
+ * @param ingredients the ingredients to display, rendered in list order.
+ */
 @Composable
 fun IngredientsList(ingredients: List<Ingredient>){
     Column(modifier = Modifier.padding(Spacing.sm)){
@@ -30,6 +36,20 @@ fun IngredientsList(ingredients: List<Ingredient>){
     }
 }
 
+/**
+ * A single read-only ingredient row: a dot marker, the combined quantity + ingredient text, and a
+ * hairline divider underneath.
+ *
+ * [quantite] and [nourriture] are joined with a single space by default (e.g. '"200g de" + " " + "farine"'
+ * -> '"200g de farine"'), **except** when [quantite] already ends in a space (in that case 2 are
+ * concatenated directly with no extra space inserted). This lets a recipe author work around awkward
+ * spacing for quantities that don't read naturally with a space before the ingredient name (e.g. a
+ * quantity as '"Un peu de "' produces '"Un peu de farine"' rather than '"Un peu de  farine"' with a
+ * double space).
+ *
+ * @param quantite the ingredient's quantity as free text.
+ * @param nourriture the ingredient's name.
+ */
 @Composable
 fun LineIngredient(quantite: String, nourriture: String){
     Row(modifier = Modifier
@@ -37,9 +57,9 @@ fun LineIngredient(quantite: String, nourriture: String){
         .padding(Spacing.xs),
         verticalAlignment = Alignment.CenterVertically
     ){
-        Icon(imageVector = BootstrapDot, contentDescription = "Icone point", tint = MaterialTheme.colorScheme.primary)
+        Icon(imageVector = BootstrapDot, contentDescription = "Icône point", tint = MaterialTheme.colorScheme.primary)
         Spacer(Modifier.width(Spacing.md))
-        // Gestion de l'espace à la fin de la chaîne de caractères quantités
+        // Avoid a double space when the quantity string already ends with one
         if (quantite.lastOrNull() == ' '){
             Text(
                 text = quantite + nourriture,

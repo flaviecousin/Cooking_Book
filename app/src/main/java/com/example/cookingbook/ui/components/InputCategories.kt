@@ -25,6 +25,14 @@ import com.example.cookingbook.ui.data.DropdownItem
 import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.Spacing
 
+/**
+ * Category options offered in the add/edit recipe form's dropdown. Kept in sync by hand with
+ * 'CategoryList''s hardcoded list in 'RecipeGridScreen.kt'. Both currently list the same 10 categories
+ * (including "Tout" here as a selectable value, even though it's only meaningful as a grid filter,
+ * not as an actual recipe category). Since neither list derives from the other, they can drift apart
+ * again if one is edited without the other; extracting a single shared source of truth would remove
+ * that risk.
+ */
 val categories = listOf(
     DropdownItem("Tout"),
     DropdownItem("Entrées"),
@@ -38,6 +46,16 @@ val categories = listOf(
     DropdownItem("Noël/Festif")
 )
 
+/**
+ * Read-only dropdown field for picking a recipe's category, used in the add/edit form. Implemented
+ * as an [ExposedDropdownMenuBox] wrapping a non-editable [TextField]. The field only displays the
+ * current selection and opens the menu on tap; direct typing is disable ('readOnly = true', empty
+ * 'onValueChange').
+ *
+ * @param value the currently selected category label.
+ * @param onValueChange invoked with the newly selected category's title when an item from [categories]
+ * is tapped.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InputCategories(modifier: Modifier = Modifier, value: String, onValueChange: (String) -> Unit){

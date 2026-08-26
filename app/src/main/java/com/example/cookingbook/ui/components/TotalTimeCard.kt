@@ -21,6 +21,17 @@ import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.RaspberryPink
 import com.example.cookingbook.ui.theme.Spacing
 
+/**
+ * Summary card showing the recipe's combined time (prep + cook + rest), shown just below the individual
+ * [NumberCard] pills in the recipe detail screen.
+ *
+ * Formats the total as '"XhYYmin"' once it reaches 60 minutes or more (e.g. '130' -> '"2h10min"'),
+ * and as plain '"X min"' below that threshold.
+ *
+ * @param tempsPrep preparation time in minutes.
+ * @param tempsCuisson cooking time in minutes.
+ * @param tempsRepos resting time in minutes.
+ */
 @Composable
 fun TotalTimeCard(tempsPrep: Int, tempsCuisson: Int, tempsRepos: Int){
     val total = tempsPrep + tempsCuisson + tempsRepos

@@ -27,6 +27,25 @@ import com.example.cookingbook.ui.models.FilterTextViewModel
 import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.Spacing
 
+/**
+ * Recipe title search bar, shown at the top of the recipe grid. Combines a text field with an inline
+ * results dropdown listing matching titles.
+ *
+ * The [LaunchedEffect] keyed on [recettes] re-runs [FilterTextViewModel.setTitles] whenever the recipe
+ * list changes (e.g. after an add/edit/delete), keeping the searchable title pool current. But it
+ * does **not** re-run [FilterTextViewModel.filterText] afterwards, so if a search is active when the
+ * recipe list changes, [FilterTextViewModel.filteredItems] can briefly show stale results (e.g. a
+ * title that was just deleted) until the next keystroke re-triggers filtering.
+ *
+ * Tapping a result looks the recipe up by title via 'recettes.find {it.titre == titreTrouve}' rather
+ * than carrying an id through. 2 recipes sharing an exact title would resolve to whichever one 'find'
+ * encounters first.
+ *
+ * @param viewModel owns the search text -> results filtering logic; default to a fresh instance scoped
+ * to this composable via 'viewModel()'.
+ * @param recettes the full recipe list to search against.
+ * @param onResultClick invoked with the tapped result's [Recette]
+ */
 @Composable
 fun SearchBar(
     viewModel: FilterTextViewModel = viewModel(),
@@ -64,10 +83,6 @@ fun SearchBar(
                 unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                 disabledContainerColor = MaterialTheme.colorScheme.surface
             )
-            // A ajouter si envie : icône permettant de supprimer le texte de l'input
-            /*trailingIcon = {
-                Icon(imageVector = VscodeCodiconsError ,contentDescription = "Supprimer la sélection")
-            }*/
         )
         if (text.isNotEmpty()){
             LazyColumn{
