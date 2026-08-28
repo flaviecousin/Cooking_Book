@@ -3,7 +3,13 @@
 *Personal project, August 2026*
 
 A personal recipe notebook Android app, built natively with **Kotlin** and **Jetpack Compose**. Cooking Book lets you save, browse, filter, and share your own recipes. No account, no backend, everything stays on your device.
+
 The visual reference was created on Emergent and used a React Native/Expo mockup, then the project was rebuilt from scratch as a native Kotlin/Android app.
+
+![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
+![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-4285F4?style=for-the-badge&logo=jetpackcompose&logoColor=white)
+![Android Studio](https://img.shields.io/badge/Android%20Studio-%233DDC84.svg?style=for-the-badge&logo=android-studio&logoColor=white)
+![Room](https://img.shields.io/badge/Room-4285F4?style=for-the-badge)
 
 ## 📖 Preview
 ## 🧩 Features
@@ -83,5 +89,8 @@ The visual identity leans towards editorial and warm: cream backgrounds, deep au
 - Add basic form validation in [AddScreen.kt] (e.g. prevent saving a recipe with an empty title, ingredient list or preparation steps)
 - Room's [exportSchema = false] in [AppDatabase.kt] means no migration path is set up yet if the schema needs to change later
 
-## License
-This is a portfolio and personal project with no reuse license. Every icons have their own licenses in their own code's files.
+## 📜 License
+This code in this repository is licensed under multiple licenses. Feel free to use it as a reference, but please don't republish it as your own portfolio piece.
+This project uses third-party icons and fonts, which remains under their own original licenses:
+- Icons adapted from [composables.com/icons](https://composables.com/icons), sourced from various open-source icon sets (Feather Icons, Bootstrap Icons, Heroicons, Radix Icons, Phosphor Icons, Fluent UI System Icons, VS Codicons, Lucide. *Check each set's original license before reuse.*
+- Fonts: Playfair Display (SIL Open Font License) and DSE Typewriter. *Verify DSE Typewriter's license terms in [app/src/main/res/font/LICENSE.md]
