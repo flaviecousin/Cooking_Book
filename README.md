@@ -33,18 +33,25 @@ The visual reference was created on Emergent and used a React Native/Expo mockup
 
 ## 🗂️ Architecture
 The app follows a simple **Model-View-ViewModel (MVVM)** structure:
-```Bash
-UI (Compose screens)
-      ↕
-RecetteViewModel      -----------> exposes recipes as a StateFlow, handles create/update/delete
-      ↕
-RecetteRepository     -----------> thin data-access layer
-      ↕
-RecetteRequests (Room DAO) ------> SQL queries against the local database
-      ↕
-AppDatabase (Room)
+```mermaid
+flowchart TD;
+      A["UI: Compose screens (RecipeGridScreen, RecipeScreen, AddScreen)"] <--> B["RecetteViewModel exposes recipes as a StateFlow handles create/update/delete"]
+      B <--> C["RecetteRepository thin data-access layer"]
+      C <--> D["RecetteRequests (Room DAO) SQL queries"]
+      D <--> E@{shape: cyl, label: "AppDatabase (Room) recettes table"}
 ```
 Dependency injection is done manually (no Hilt/Koin yet, see "Future improvements"): the database, repository, and a [ViewModelProvider.Factory] are wired together once in [MainActivity] and shared across the whole navigation graph via a single [RecetteViewModel] instance.
+
+## 🔀 Navigation flow
+```mermaid
+flowchart LR;
+      A["Recipe Grid (RECETTES)"] --> |tap a recipe card| B["Recipe Detail (recipe_detail/:id)"]
+      B --> |back| A
+      B --> |tap edit icon| C["Edit Recipe (recipe_edit/:id)"]
+      C --> |save/back| B
+      A --> |bottom nav| D["Add Recipe (AJOUTER)"]
+      D --> |save| A
+```
 
 ## 🗃️ Project structure
 ```Bash
