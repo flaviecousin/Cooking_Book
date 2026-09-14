@@ -74,14 +74,8 @@ fun openRecipeFile(context: Context, bitmap: ImageBitmap, fileName: String, form
  * Renders [bitmap] onto an opaque [WarmCream]-colored background and saves the result as a PNG under
  * 'context.cacheDir/images/'.
  *
- * The opaque background compositing step matters: the source [bitmap] (captured from a Compose layer)
- * can have transparent regions (e.g. any gap outside the actual drawn content) which would otherwise
- * export as transparent PNG pixels rather than matching the app's cream background, looking broken
- * when viewed outside the app.
- *
- * Also defensively copies out of [Bitmap.Config.HARDWARE] first, since hardware bitmaps can't be
- * directly read pixel-by-pixel (required for 'Canvas' drawing here). Most GPU-backed bitmaps from a
- * [androidx.compose.ui.graphics.layer.GraphicsLayer] capture may use this config.
+ * Delegates the background compositing step to [applyWarmCreamBackground] to guarantee visual
+ * consistency with [saveAsPdf].
  *
  * @param context used to resolve the app's cache directory.
  * @param bitmap the source bitmap to export, potentially with transparent regions.
@@ -89,21 +83,12 @@ fun openRecipeFile(context: Context, bitmap: ImageBitmap, fileName: String, form
  * @return the saved PNG [File].
  */
 private fun saveAsImage(context: Context, bitmap: Bitmap, fileName: String): File{
-    val softwareBitmap = if (bitmap.config == Bitmap.Config.HARDWARE){
-        bitmap.copy(Bitmap.Config.ARGB_8888, false)
-    }
-    else{
-        bitmap
-    }
-    val backgroundColor = WarmCream.toArgb()
-    val bitmapWithBackground = createBitmap(softwareBitmap.width, softwareBitmap.height).apply {
-        val canvas = android.graphics.Canvas(this)
-        canvas.drawColor(backgroundColor)
-        canvas.drawBitmap(softwareBitmap, 0f, 0f, null)
-    }
+    val bitmapWithBackground = applyWarmCreamBackground((bitmap))
     val dir = File(context.cacheDir, "images").apply { mkdirs() }
     val file = File(dir, "$fileName.png")
-    FileOutputStream(file).use {out -> bitmapWithBackground.compress(Bitmap.CompressFormat.PNG, 100, out)}
+    FileOutputStream(file).use{out ->
+        bitmapWithBackground.compress(Bitmap.CompressFormat.PNG, 100,out)
+    }
     return file
 }
 
@@ -111,23 +96,22 @@ private fun saveAsImage(context: Context, bitmap: Bitmap, fileName: String): Fil
  * Renders [bitmap] onto a single-page PDF sized exactly to the bitmap's dimensions, and saves it
  * under 'context.cacheDir/pdfs/'.
  *
+ * Uses [applyWarmCreamBackground] prior to rendering so that recipes lacking a photo (or containing
+ * transparent layout regions) displays an opaque [WarmCream] background matching [saveAsImage],
+ * preventing PDF viewers from rendering these areas as plain default white.
+ *
  * @param context used to resolve the app's cache directory.
  * @param bitmap the source bitmap to export.
  * @param fileName base file name (without extension).
  * @return the saved PDF [File].
  */
 private fun saveAsPdf(context: Context, bitmap: Bitmap, fileName: String): File{
-    val softwareBitmap = if(bitmap.config == Bitmap.Config.HARDWARE){
-        bitmap.copy(Bitmap.Config.ARGB_8888, false)
-    } else bitmap
+    val bitmapWithBackground = applyWarmCreamBackground(bitmap)
 
     val document = PdfDocument()
-    val pageInfo = PdfDocument.PageInfo.Builder(softwareBitmap.width, softwareBitmap.height, 1).create()
+    val pageInfo = PdfDocument.PageInfo.Builder(bitmapWithBackground.width, bitmapWithBackground.height, 1).create()
     val page = document.startPage(pageInfo)
-    val backgroundColor = WarmCream.toArgb()
-    val canvas = page.canvas
-    canvas.drawColor(backgroundColor)
-    canvas.drawBitmap(softwareBitmap, 0f, 0f, null)
+    page.canvas.drawBitmap(bitmapWithBackground, 0f, 0f, null)
     document.finishPage(page)
 
     val dir = File(context.cacheDir, "pdfs").apply { mkdirs() }
@@ -135,4 +119,30 @@ private fun saveAsPdf(context: Context, bitmap: Bitmap, fileName: String): File{
     FileOutputStream(file).use {out -> document.writeTo(out)}
     document.close()
     return file
+}
+
+/**
+ * Composites the source [bitmap] over an opaque [WarmCream]-colored background canvas.
+ *
+ * Handles 2 critical transformations for exported recipe content:
+ * 1. Defensively converts [Bitmap.Config.HARDWARE] instances (produced by Compose layer captures)
+ *    into software-backed [Bitmap.Config.ARGB_8888] bitmaps that can be read by [android.graphics.Canvas].
+ * 2. Replaces any transparent regions in the source capture (e.g. recipes without top photos) with
+ *    the app's signature cream background, ensuring identical output across PNG and PDF formats.
+ *
+ * @param bitmap the source bitmap captured from the Compose hierarchy.
+ * @return a software [Bitmap] with an opaque [WarmCream] background applied.
+ */
+private fun applyWarmCreamBackground(bitmap: Bitmap): Bitmap{
+    val softwareBitmap = if(bitmap.config == Bitmap.Config.HARDWARE){
+        bitmap.copy(Bitmap.Config.ARGB_8888, false)
+    } else{
+        bitmap
+    }
+    val backgroundColor = WarmCream.toArgb()
+    return createBitmap(softwareBitmap.width, softwareBitmap.height).apply {
+        val canvas = android.graphics.Canvas(this)
+        canvas.drawColor(backgroundColor)
+        canvas.drawBitmap(softwareBitmap, 0f, 0f, null)
+    }
 }
