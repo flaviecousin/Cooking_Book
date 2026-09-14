@@ -90,7 +90,6 @@ The visual identity leans towards editorial and warm: cream backgrounds, deep au
 - Error handling in [RecetteViewModel.kt] only logs exceptions via [printStackTrace()]. No feedback is surfaced to the user if a save/update/delete fails
 - No placeholder illustration in [RecipeCard.kt] when a recipe has no photo (currently falls back to a plain colored background)
 - [RecetteRequests.kt]'s [getRecetteById] query is unused. Recipe lookups currently go through the full in-memory list instead
-- Add basic form validation in [AddScreen.kt] (e.g. prevent saving a recipe with an empty title, ingredient list or preparation steps)
 - Room's [exportSchema = false] in [AppDatabase.kt] means no migration path is set up yet if the schema needs to change later
 
 ## 📜 License
