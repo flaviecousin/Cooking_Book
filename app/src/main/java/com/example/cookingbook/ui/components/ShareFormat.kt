@@ -111,11 +111,6 @@ private fun saveAsImage(context: Context, bitmap: Bitmap, fileName: String): Fil
  * Renders [bitmap] onto a single-page PDF sized exactly to the bitmap's dimensions, and saves it
  * under 'context.cacheDir/pdfs/'.
  *
- * Unlike [saveAsImage], no background compositing is done here. Any transparent regions in [bitmap]
- * are drawn as-is onto the PDF page, which PDF viewers typically render as plain white rather than
- * the app's cream background. Worth aligning with [saveAsImage]'s background handling if visual
- * consistency between the 2 export formats matters.
- *
  * @param context used to resolve the app's cache directory.
  * @param bitmap the source bitmap to export.
  * @param fileName base file name (without extension).
@@ -129,7 +124,10 @@ private fun saveAsPdf(context: Context, bitmap: Bitmap, fileName: String): File{
     val document = PdfDocument()
     val pageInfo = PdfDocument.PageInfo.Builder(softwareBitmap.width, softwareBitmap.height, 1).create()
     val page = document.startPage(pageInfo)
-    page.canvas.drawBitmap(softwareBitmap, 0f, 0f, null)
+    val backgroundColor = WarmCream.toArgb()
+    val canvas = page.canvas
+    canvas.drawColor(backgroundColor)
+    canvas.drawBitmap(softwareBitmap, 0f, 0f, null)
     document.finishPage(page)
 
     val dir = File(context.cacheDir, "pdfs").apply { mkdirs() }
