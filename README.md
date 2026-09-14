@@ -86,7 +86,6 @@ The visual identity leans towards editorial and warm: cream backgrounds, deep au
 ## 🔭 Future improvements
 - Using Hilt with Room instead of manual dependency injection
 - Using a class, enum or something global for category instead of writing them in the code
-- Building the numbered badge in [AddStepsRecipe.kt]'s WidgetSteps() with something more appropriate (currently using [Button])
 - Search bar : if 2 recipes has the exact same title, then the one shown will be the one the function 'find' finds first
 - Error handling in [RecetteViewModel.kt] only logs exceptions via [printStackTrace()]. No feedback is surfaced to the user if a save/update/delete fails
 - [ShareFormat.kt]: PNG export composites onto an opaque background, but PDF export doesn't. The 2 formats can look inconsistent when a recipe has no photo
