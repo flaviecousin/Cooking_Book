@@ -96,19 +96,45 @@ fun AddScreen(
                     contentAlignment = Alignment.Center,
                 ){
                     SavingButton(onClick = {
-                        if (isEditMode){
-                            viewModel.modifierRecette(newRecipe){
+                        val isTitleValid = newRecipe.titre.isNotBlank()
+                        val hasValidIngredients = newRecipe.ingredients.any{it.ingredient.isNotBlank()}
+                        val hasValidSteps = newRecipe.instructions.any{ it.etape.isNotBlank() }
+                        when{
+                            !isTitleValid -> {
                                 coroutineScope.launch {
-                                    snackbarHostState.showSnackbar("La recette a bien été modifiée !")
+                                    snackbarHostState.showSnackbar("Veuillez saisir un titre pour la recette")
                                 }
-                                onSave()
                             }
-                        }
-                        else{
-                            viewModel.ajouterRecette(newRecipe){
-                                newRecipe = recetteVide()
+                            !hasValidIngredients -> {
                                 coroutineScope.launch {
-                                    snackbarHostState.showSnackbar("La recette a bien été enregistrée !")
+                                    snackbarHostState.showSnackbar("Veuillez saisir au moins un ingrédient")
+                                }
+                            }
+                            !hasValidSteps -> {
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar("Veuillez saisir au moins une étape de la préparation")
+                                }
+                            }
+                            else -> {
+                                val cleanedRecipe = newRecipe.copy(
+                                    ingredients = newRecipe.ingredients.filter { it.ingredient.isNotBlank()},
+                                    instructions = newRecipe.instructions.filter { it.etape.isNotBlank()}
+                                )
+                                if (isEditMode){
+                                    viewModel.modifierRecette(cleanedRecipe){
+                                        coroutineScope.launch {
+                                            snackbarHostState.showSnackbar("La recette a bien été modifiée !")
+                                        }
+                                        onSave()
+                                    }
+                                }
+                                else{
+                                    viewModel.ajouterRecette(cleanedRecipe){
+                                        newRecipe = recetteVide()
+                                        coroutineScope.launch {
+                                            snackbarHostState.showSnackbar("La recette a bien été enregistrée !")
+                                        }
+                                    }
                                 }
                             }
                         }

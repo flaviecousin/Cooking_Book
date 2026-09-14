@@ -1,19 +1,18 @@
 package com.example.cookingbook.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -54,19 +53,28 @@ fun WidgetSteps(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Unit, o
         Spacer(Modifier.height(Spacing.sm))
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.Top) {
+            verticalAlignment = Alignment.Top
+        ) {
             Card(
-                modifier = Modifier.size(Spacing.xxl),
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .height(Spacing.xxl)
+                    .width(Spacing.xxl),
                 shape = CircleShape,
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 )
             ){
-                Text(
-                    text = labelNumber.toString(),
-                    style= MaterialTheme.typography.bodySmall,
-                )
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ){
+                    Text(
+                        text = labelNumber.toString(),
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
             }
             Spacer(Modifier.width(Spacing.md))
             OutlinedTextField(
@@ -91,6 +99,7 @@ fun WidgetSteps(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Unit, o
             if(buttonShown){
                 IconButton(
                     onClick = onDelete,
+                    modifier = Modifier.padding(top = 4.dp)
                 ){
                     Icon(imageVector = VscodeCodiconsError ,contentDescription = "Supprimer la sélection", tint = MaterialTheme.colorScheme.onSurface)
                 }
