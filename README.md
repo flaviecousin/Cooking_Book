@@ -89,7 +89,6 @@ The visual identity leans towards editorial and warm: cream backgrounds, deep au
 - Building the numbered badge in [AddStepsRecipe.kt]'s WidgetSteps() with something more appropriate (currently using [Button])
 - Search bar : if 2 recipes has the exact same title, then the one shown will be the one the function 'find' finds first
 - Error handling in [RecetteViewModel.kt] only logs exceptions via [printStackTrace()]. No feedback is surfaced to the user if a save/update/delete fails
-- [FilterTextViewModel.kt]'s search results aren't re-filtered when the recipe list changes while a search is active, which can briefly show stale results
 - [ShareFormat.kt]: PNG export composites onto an opaque background, but PDF export doesn't. The 2 formats can look inconsistent when a recipe has no photo
 - No placeholder illustration in [RecipeCard.kt] when a recipe has no photo (currently falls back to a plain colored background)
 - [RecetteRequests.kt]'s [getRecetteById] query is unused. Recipe lookups currently go through the full in-memory list instead
