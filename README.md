@@ -88,7 +88,6 @@ The visual identity leans towards editorial and warm: cream backgrounds, deep au
 - Using a class, enum or something global for category instead of writing them in the code
 - Search bar : if 2 recipes has the exact same title, then the one shown will be the one the function 'find' finds first
 - Error handling in [RecetteViewModel.kt] only logs exceptions via [printStackTrace()]. No feedback is surfaced to the user if a save/update/delete fails
-- [ShareFormat.kt]: PNG export composites onto an opaque background, but PDF export doesn't. The 2 formats can look inconsistent when a recipe has no photo
 - No placeholder illustration in [RecipeCard.kt] when a recipe has no photo (currently falls back to a plain colored background)
 - [RecetteRequests.kt]'s [getRecetteById] query is unused. Recipe lookups currently go through the full in-memory list instead
 - Add basic form validation in [AddScreen.kt] (e.g. prevent saving a recipe with an empty title, ingredient list or preparation steps)
