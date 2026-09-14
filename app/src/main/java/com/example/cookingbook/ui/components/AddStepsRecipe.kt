@@ -37,10 +37,6 @@ import com.example.cookingbook.ui.theme.Spacing
  * A single editable preparation step row: a numbered circular badge, a text field for the step's
  * instructions, and an optional delete button.
  *
- * Note the numbered badge is a [Button] with an [onClick] parameter, but [AddSteps] always passes
- * an empty lambda for it (the badge is effectively non-interactive display-only in current usage,
- * despite being built as a clickable component).
- *
  * @param labelNumber the step's 1-based display position, shown both on the badge and in the field's
  * placeholder text. Not a stable identifier (see [AddSteps] for the actual identity key used).
  * @param buttonShown whether the delete icon button is rendered. Hidden when only one step remains,
@@ -62,7 +58,6 @@ fun WidgetSteps(labelNumber: Int, buttonShown : Boolean, onDelete: () -> Unit, o
             Card(
                 modifier = Modifier.size(Spacing.xxl),
                 shape = CircleShape,
-                //contentPadding = PaddingValues(0.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
