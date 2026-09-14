@@ -18,6 +18,12 @@ import kotlinx.coroutines.flow.StateFlow
 class FilterTextViewModel : ViewModel(){
     /** The full, unfiltered pool of recipe titles to search against */
     private var allTitles: List<String> = emptyList()
+
+    /**
+     * The last search query passed to [filterText], kept so [setTitles] can reapply it whenever
+     * the title pool changes
+     */
+    private var currentQuery: String = ""
     private val _filteredItems = MutableStateFlow<List<String>>(emptyList())
 
     /**
@@ -35,6 +41,7 @@ class FilterTextViewModel : ViewModel(){
      */
     fun setTitles(titles: List<String>){
         allTitles = titles
+        applyFilter()
     }
 
     /**
@@ -50,6 +57,14 @@ class FilterTextViewModel : ViewModel(){
         }
         else{
             allTitles.filter{ it.contains(input, ignoreCase = true) }
+        }
+    }
+
+    private fun applyFilter(){
+        _filteredItems.value = if (currentQuery.isBlank()){
+            emptyList()
+        } else {
+            allTitles.filter { it.contains(currentQuery, ignoreCase = true) }
         }
     }
 }
