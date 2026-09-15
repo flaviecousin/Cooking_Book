@@ -23,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -250,8 +251,9 @@ private fun RecipeContent(
  * Recipe detail screen: displays a single recipe in full, and provides edit, delete and share actions.
  *
  * - **Edit / Delete**: the top bar exposes a pencil icon (invokes [onModification] directly) and a
- * trash icon, which opens a confirmation [AlertDialog] before invoking [onDelete] (deletion itself
- * is not fired directly from the icon tap).
+ * trash icon, which opens a confirmation [AlertDialog] before invoking [onDelete]. On success, the
+ * caller (see [com.example.cookingbook.ui.components.NavBar]) navigates away; on failure, [onDelete]'s
+ * error callback surfaces a message via the screen's own [SnackbarHost], and the screen stays open.
  * - **Share**: a floating [ShareButton] opens [ShareFormatDialog], letting the user pick PNG or PDF
  * and whether to share or open the file. The actual bitmap is produced from an invisible, off-screen
  * copy of [RecipeContent] (see [captureFullSize] and [CapturableContent]) rather than from the visible,
@@ -268,7 +270,9 @@ private fun RecipeContent(
  * @param nbPers number of servings.
  * @param img path/URI to the recipe photo, or an empty string if none.
  * @param onBack invoked when the user navigates back (top bar arrow or system back).
- * @param onDelete invoked after the user confirms deletion in the dialog.
+ * @param onDelete invoked after the user confirms deletion in the dialog with an error callback the
+ * caller should invoke (e.g. to show a snackbar) if the deletion fails. On success, the caller is
+ * expected to navigate away; on failure, this screen stays visible.
  * @param onModification invoked when the user taps the edit (pencil) icon.
  * @param ingredient the recipe's ingredient list.
  * @param preparation the recipe's ordered preparation steps.
@@ -280,7 +284,7 @@ fun RecipeScreen(
     titre: String, categorie: String,
     tempsPrep: Int, tempsCuisson: Int, tempsRepos:Int,
     nbPers: Int, img: String,
-    onBack: () -> Unit, onDelete: () -> Unit, onModification: () -> Unit,
+    onBack: () -> Unit, onDelete: (onError: (String) -> Unit) -> Unit, onModification: () -> Unit,
     ingredient: List<Ingredient>, preparation: List<Preparation>,
     conseils: String
 ){
@@ -289,6 +293,7 @@ fun RecipeScreen(
     val context = LocalContext.current
     val aUneImage = img.isNotEmpty()
     val graphicsLayer = rememberGraphicsLayer()
+    val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     var showFormatDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -403,7 +408,9 @@ fun RecipeScreen(
                     confirmButton = {
                         TextButton(onClick = {
                             showDeleteDialog = false
-                            onDelete()
+                            onDelete{ message ->
+                                scope.launch { snackbarHostState.showSnackbar(message) }
+                            }
                         }) {
                             Text("Supprimer")
                         }

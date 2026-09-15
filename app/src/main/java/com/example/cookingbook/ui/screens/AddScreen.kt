@@ -58,6 +58,8 @@ import kotlinx.coroutines.launch
  * confirmation snackbar, and invokes [onSave] (used by the caller to navigate back to the recipe
  * detail screen). The form is **not** reset in this case, since the screen is expected to be left
  * immediately after.
+ * snackbarHostState surfaces both form-validation messages and save/update failures reported by the
+ * ViewModel's on Error callback.
  *
  * @param viewModel used to persist the new or edited recipe.
  * @param recetteExistante the recipe being edited, or 'null' to create a new one from scratch.
@@ -121,20 +123,32 @@ fun AddScreen(
                                     instructions = newRecipe.instructions.filter { it.etape.isNotBlank()}
                                 )
                                 if (isEditMode){
-                                    viewModel.modifierRecette(cleanedRecipe){
-                                        coroutineScope.launch {
-                                            snackbarHostState.showSnackbar("La recette a bien été modifiée !")
+                                    viewModel.modifierRecette(
+                                        cleanedRecipe,
+                                        onSuccess = {
+                                            coroutineScope.launch {
+                                                snackbarHostState.showSnackbar("La recette a bien été modifiée !")
+                                            }
+                                            onSave()
+                                        },
+                                        onError = {message ->
+                                            coroutineScope.launch{ snackbarHostState.showSnackbar(message)}
                                         }
-                                        onSave()
-                                    }
+                                    )
                                 }
                                 else{
-                                    viewModel.ajouterRecette(cleanedRecipe){
-                                        newRecipe = recetteVide()
-                                        coroutineScope.launch {
-                                            snackbarHostState.showSnackbar("La recette a bien été enregistrée !")
+                                    viewModel.ajouterRecette(
+                                        cleanedRecipe,
+                                        onSuccess = {
+                                            newRecipe = recetteVide()
+                                            coroutineScope.launch {
+                                                snackbarHostState.showSnackbar("La recette a bien été enregistrée !")
+                                            }
+                                        },
+                                        onError = { message ->
+                                            coroutineScope.launch { snackbarHostState.showSnackbar(message) }
                                         }
-                                    }
+                                    )
                                 }
                             }
                         }

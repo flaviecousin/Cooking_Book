@@ -40,7 +40,8 @@ import com.example.cookingbook.ui.screens.RecipeScreen
  * from the current in-memory recipe list rather than querying the database directly (see
  * [com.example.cookingbook.ui.data.RecetteRequests.getRecetteById], which is unused). Renders nothing
  * if no recipe with that id is found (e.g. it was just deleted). Wired delete to [RecetteViewModel.supprimerRecette]
- * followed by popping back, and edit to navigating into 'recipe_edit/{id}'.
+ * popping back only on success and surfacing a snackbar via the passed error callback on failure;
+ * edit to navigating into 'recipe_edit/{id}'.
  * - 'recipe_edit/{recipeId}': reuses [AddScreen] in edit mode by passing it the found
  * [com.example.cookingbook.ui.data.Recette]; 'onSave' pops back to the detail screen.
  * - [Destination.AJOUTER.route]: [AddScreen] in create mode (no existing recipe passed).
@@ -82,10 +83,12 @@ fun NavigationHost(
                     tempsRepos = recette.tempsRepos,
                     nbPers = recette.people,
                     img = recette.image,
-                    onDelete = {
-                        viewModel.supprimerRecette(recette){
-                            navController.popBackStack()
-                        }
+                    onDelete = { onError ->
+                        viewModel.supprimerRecette(
+                            recette,
+                            onSuccess = {navController.popBackStack()},
+                            onError = onError
+                        )
                     },
                     onModification = {
                         navController.navigate("recipe_edit/${recette.id}")

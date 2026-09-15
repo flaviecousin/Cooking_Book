@@ -16,10 +16,11 @@ import kotlinx.coroutines.launch
  * graph.
  *
  * All write operations ([ajouterRecette], [supprimerRecette], [modifierRecette]) share the same shape:
- * they run on [viewModelScope], swallow exceptions with a stack trace print rather than surfacing
- * them to the UI, and take an optional [onSuccess] callback used by callers to chain UI feedback
- * (e.g. showing a snackbar, resetting a form, or navigating back) only once the operation has actually
- * completed (important since Room operations are suspending and shouldn't be assumed to finish synchronously).
+ * they run on [viewModelScope], log the exception via [Throwable.printStackTrace] and report failure
+ * to the UI through an optional [onError] callback, and take an optional [onSuccess] callback used
+ * by callers to chain UI feedback (e.g. showing a snackbar, resetting a form, or navigating back)
+ * only once the operation has actually completed (important since Room operations are suspending and
+ * shouldn't be assumed to finish synchronously).
  *
  * @param repository the data access layer this ViewModel delegates to.
  */
@@ -42,8 +43,10 @@ class RecetteViewModel(private val repository: RecetteRepository) : ViewModel() 
      * @param recette the recipe to create.
      * @param onSuccess invoked after a successful insert; callers typically use this to reset the
      * add form and show a confirmation message.
+     * @param onError invoked with a user-facing message if the add fails. Callers typically use
+     * this to show a snackbar. The recipe list is left unchanged and no navigation occurs.
      */
-    fun ajouterRecette(recette: Recette, onSuccess: () -> Unit = {}){
+    fun ajouterRecette(recette: Recette, onSuccess: () -> Unit = {}, onError: (String) -> Unit = {}){
         viewModelScope.launch {
             try{
                 repository.insert(recette)
@@ -51,6 +54,7 @@ class RecetteViewModel(private val repository: RecetteRepository) : ViewModel() 
             }
             catch (e: Exception){
                 e.printStackTrace()
+                onError("Impossible d'enregistrer la recette, veuillez réessayer.")
             }
         }
     }
@@ -58,13 +62,15 @@ class RecetteViewModel(private val repository: RecetteRepository) : ViewModel() 
     /**
      * Permanently deletes [recette] via [RecetteRepository.delete]. There is no undo (the
      * confirmation step lives in the UI layer (see the delete [androidx.compose.material3.AlertDialog]
-     * in 'RecipeScreen.kt'), not here.
+     * in 'RecipeScreen.kt'), not here).
      *
      * @param recette the recipe to delete
      * @param onSuccess invoked after a successful delete; callers typically use this to navigate
      * back to the recipe grid.
+     * @param onError invoked with a user-facing message if the delete fails. Callers typically use
+     * this to show a snackbar. The recipe list is left unchanged and no navigation occurs.
      */
-    fun supprimerRecette(recette: Recette, onSuccess: () -> Unit = {}){
+    fun supprimerRecette(recette: Recette, onSuccess: () -> Unit = {}, onError: (String) -> Unit){
         viewModelScope.launch {
             try{
                 repository.delete(recette)
@@ -72,6 +78,7 @@ class RecetteViewModel(private val repository: RecetteRepository) : ViewModel() 
             }
             catch (e: Exception){
                 e.printStackTrace()
+                onError("Impossible de supprimer la recette, veuillez réessayer.")
             }
         }
     }
@@ -85,8 +92,10 @@ class RecetteViewModel(private val repository: RecetteRepository) : ViewModel() 
      * match the existing row).
      * @param onSuccess invoked after a successful update; callers typically use this to show a
      * confirmation message and navigate back to the recipe detail screen.
+     * @param onError invoked with a user-facing message if the modification fails. Callers typically
+     * use this to show a snackbar. The recipe list is left unchanged and no navigation occurs.
      */
-    fun modifierRecette(recette: Recette, onSuccess: () -> Unit = {}){
+    fun modifierRecette(recette: Recette, onSuccess: () -> Unit = {}, onError: (String) -> Unit){
         viewModelScope.launch {
             try{
                 repository.update(recette)
@@ -94,6 +103,7 @@ class RecetteViewModel(private val repository: RecetteRepository) : ViewModel() 
             }
             catch (e: Exception){
                 e.printStackTrace()
+                onError("Impossible de modifier la recette, veuillez réssayer.")
             }
         }
     }
