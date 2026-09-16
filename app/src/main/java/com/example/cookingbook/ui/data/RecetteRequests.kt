@@ -13,6 +13,12 @@ import kotlinx.coroutines.flow.Flow
  * from a coroutine, e.g. within [androidx.lifecycle.viewModelScope]), the read query returns a [Flow]
  * so Compose UI observing it recomposes automatically whenever the underlying data changes, without
  * any manual refresh logic.
+ *
+ * There is intentionnally no by-id lookup query here: the app already keeps the memory via [getAllRecettes]
+ * (collected as a [kotlinx.coroutines.flow.StateFlow] in [com.example.cookingbook.ui.models.RecetteViewModel]),
+ * so screens needing a single recipe (see 'NavBar.kt') simply 'find' it in that list instead of issuing
+ * a separate query. This also keeps those screens reactive to edits made elsewhere, which a one-shot
+ * by-id query would not.
  */
 @Dao
 interface RecetteRequests {
@@ -24,17 +30,6 @@ interface RecetteRequests {
      */
     @Query("SELECT * FROM recettes ORDER BY titre ASC")
     fun getAllRecettes(): Flow<List<Recette>>
-
-    /**
-     * Fetches a single recipe by [id].
-     *
-     * @return the matching [Recette], or 'null' if no recipe with that id exists. Currently unused
-     * by the rest of the app (recipe lookups elsewhere (e.g. 'NavBar.kt''s recipe detail route) go
-     * through [getAllRecettes]'s in-memory list and 'find {it.id == ...}' instead of calling this
-     * directly).
-     */
-    @Query("SELECT * FROM recettes WHERE id = :id")
-    suspend fun getRecetteById(id: Long): Recette?
 
     /**
      * Inserts [recette]. On a primary key conflict, the existing row is replaced entirely rather than

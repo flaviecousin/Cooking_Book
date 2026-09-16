@@ -31,15 +31,14 @@ import com.example.cookingbook.ui.theme.Spacing
  * Recipe title search bar, shown at the top of the recipe grid. Combines a text field with an inline
  * results dropdown listing matching titles.
  *
- * The [LaunchedEffect] keyed on [recettes] re-runs [FilterTextViewModel.setTitles] whenever the recipe
- * list changes (e.g. after an add/edit/delete), keeping the searchable title pool current. But it
- * does **not** re-run [FilterTextViewModel.filterText] afterwards, so if a search is active when the
- * recipe list changes, [FilterTextViewModel.filteredItems] can briefly show stale results (e.g. a
- * title that was just deleted) until the next keystroke re-triggers filtering.
+ * The [LaunchedEffect] keyed on [recettes] re-runs [FilterTextViewModel.setRecipes] whenever the recipe
+ * list changes (e.g. after an add/edit/delete), keeping the searchable pool current and immediately
+ * reapplying ant active search query.
  *
- * Tapping a result looks the recipe up by title via 'recettes.find {it.titre == titreTrouve}' rather
- * than carrying an id through. 2 recipes sharing an exact title would resolve to whichever one 'find'
- * encounters first.
+ * Each filtered result carries its own [Recette] (in particular its unique 'id'), so tapping a result
+ * invokes [onResultClick] directly with that exact recipe - no secondary "find by title" lookup is
+ * performed, which means 2 recipes sharing the exact same title are no longer ambiguous: whichever
+ * one the user actually tapped is the one opened.
  *
  * @param viewModel owns the search text -> results filtering logic; default to a fresh instance scoped
  * to this composable via 'viewModel()'.
@@ -53,7 +52,7 @@ fun SearchBar(
     onResultClick: (Recette) -> Unit = {},
 ){
     LaunchedEffect(recettes) {
-        viewModel.setTitles(recettes.map{it.titre})
+        viewModel.setRecipes(recettes)
     }
 
     val filteredItems by viewModel.filteredItems.collectAsState()
@@ -88,16 +87,16 @@ fun SearchBar(
             LazyColumn{
                 items(
                     count = filteredItems.size,
-                    key = {index -> filteredItems[index]}
+                    key = {index -> filteredItems[index].id}
                 ){index ->
-                    val titreTrouve = filteredItems[index]
+                    val recetteTrouvee = filteredItems[index]
                     ListItem(
-                        headlineContent = {Text(titreTrouve)},
+                        headlineContent = {Text(recetteTrouvee.titre)},
                         modifier = Modifier
                             .fillParentMaxWidth()
                             .padding(Spacing.sm)
                             .clickable {
-                                recettes.find { it.titre == titreTrouve }?.let(onResultClick)
+                                onResultClick(recetteTrouvee)
                             }
                     )
                 }
