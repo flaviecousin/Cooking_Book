@@ -12,6 +12,7 @@ private val CookingBookColorScheme = lightColorScheme(
     // Pink family
     primary = RaspberryPink,
     onPrimary = WarmCream,
+    onSurfaceVariant = GreyPink,
     primaryContainer = RosyPowdered,
     onPrimaryContainer = RaspberryPink,
     // Cream/neutral family
