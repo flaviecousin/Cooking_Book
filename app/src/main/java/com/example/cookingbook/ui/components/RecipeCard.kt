@@ -76,7 +76,7 @@ fun RecipeCard (titre: String, categorie: String, tempsPrep: Int, tempsCuisson: 
                     model = img,
                     contentDescription = "Photo de $titre",
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Fit
+                    contentScale = ContentScale.Crop
                 )
                 // Bottom gradient scrim so the overlaid text stays legible over the photo
                 Box(
