@@ -86,7 +86,6 @@ The visual identity leans towards editorial and warm: cream backgrounds, deep au
 ## 🔭 Future improvements
 - Using Hilt with Room instead of manual dependency injection
 - Using a class, enum or something global for category instead of writing them in the code
-- No placeholder illustration in [RecipeCard.kt] when a recipe has no photo (currently falls back to a plain colored background)
 - Room's [exportSchema = false] in [AppDatabase.kt] means no migration path is set up yet if the schema needs to change later
 
 ## 📜 License
