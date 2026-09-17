@@ -52,6 +52,13 @@ import com.example.cookingbook.ui.data.deleteInternalImage
 fun WidgetImg(value: String, onValueChange: (String) -> Unit){
     val context = LocalContext.current
     val displayUri: Uri? = if (value.isNotEmpty()) value.toUri() else null
+
+    /*
+    Deletes the previously stored image (if any) once a newly picked image has been successfully copied
+    to internal storage, so switching photos doesn't leave the old file orphaned on the disk. The
+    check against 'savedPath' guards against deleting the very file that was just created, in the
+    unlikely case the picker/copy logic ever reused the same path.
+     */
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null){
             val savedPath = copyImageToInternalStorage(context, uri)

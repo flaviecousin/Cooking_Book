@@ -75,7 +75,8 @@ fun openRecipeFile(context: Context, bitmap: ImageBitmap, fileName: String, form
  * 'context.cacheDir/images/'.
  *
  * Delegates the background compositing step to [applyWarmCreamBackground] to guarantee visual
- * consistency with [saveAsPdf].
+ * consistency with [saveAsPdf]. Calls [clearCacheDir] first so this directory never accumulates more
+ * than the single most recent export.
  *
  * @param context used to resolve the app's cache directory.
  * @param bitmap the source bitmap to export, potentially with transparent regions.
@@ -99,7 +100,8 @@ private fun saveAsImage(context: Context, bitmap: Bitmap, fileName: String): Fil
  *
  * Uses [applyWarmCreamBackground] prior to rendering so that recipes lacking a photo (or containing
  * transparent layout regions) displays an opaque [WarmCream] background matching [saveAsImage],
- * preventing PDF viewers from rendering these areas as plain default white.
+ * preventing PDF viewers from rendering these areas as plain default white. Calls [clearCacheDir]
+ * first so this directory never accumulates more than the single most recent export.
  *
  * @param context used to resolve the app's cache directory.
  * @param bitmap the source bitmap to export.
@@ -150,8 +152,17 @@ private fun applyWarmCreamBackground(bitmap: Bitmap): Bitmap{
 }
 
 /**
- * Deletes every file currently in [dir], if it exists. Used to prevent [saveAsImage] and [saveAsPdf]
- * from silently accumulating orphaned exports across multiple shares of different recipes.
+ * Deletes every file currently in [dir], if it exists.
+ *
+ * Called at the start of [saveAsImage] and [saveAsPdf], right before writing the new export, since
+ * neither function ever removed its previous output: without this, each share of a different recipe
+ * (or a re-share of the same one) would leave the last file behind, silently accumulating orphaned
+ * exports in 'context.cacheDir/images/' and 'context.cacheDir/pdfs/' over time. Clearing the whole
+ * directory rather than tracking a single "last exported file" path is safe here because only one
+ * shared/opened export is ever expected to be in flight at a time (the file is created immediately
+ * before being handed to [FileProvider.getUriForFile] and the share/view [Intent]).
+ *
+ * @param dir the cache subdirectory to empty (either the "images" or "pdfs" folder under [Context.getCacheDir]).
  */
 private fun clearCacheDir (dir: File){
     if (dir.exists()){

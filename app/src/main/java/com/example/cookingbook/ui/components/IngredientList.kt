@@ -40,14 +40,17 @@ fun IngredientsList(ingredients: List<Ingredient>){
  * A single read-only ingredient row: a dot marker, the combined quantity + ingredient text, and a
  * hairline divider underneath.
  *
- * [quantite] and [nourriture] are joined with a single space by default (e.g. '"200g de" + " " + "farine"'
- * -> '"200g de farine"'), **except** when [quantite] already ends in a space (in that case 2 are
- * concatenated directly with no extra space inserted). This lets a recipe author work around awkward
- * spacing for quantities that don't read naturally with a space before the ingredient name (e.g. a
- * quantity as '"Un peu de "' produces '"Un peu de farine"' rather than '"Un peu de  farine"' with a
- * double space) unless there is no quantity.
+ * The combined text has 3 cases, evaluated in order:
+ * 1. If [quantite] is blank, only [nourriture] is shown, with no leading space (avoids a stray leading
+ * space for ingredients recorded with no quantity at all).
+ * 2. If [quantite] already ends in a space, [quantite] and [nourriture] are concatenated directly
+ * with no extra space inserted. This lets a recipe author work around awkward spacing for quantities
+ * that don't read naturally with a space before the ingredient name (e.g. a quantity of "Un peu de
+ * farine" rather than "Un peu de  farine" with a double space).
+ * 3. Otherwise, [quantite] and [nourriture] are joined with a single space (e.g. "200f de" + " " +
+ * "farine" -> "200g de farine").
  *
- * @param quantite the ingredient's quantity as free text.
+ * @param quantite the ingredient's quantity as free text, or blank if none was saved.
  * @param nourriture the ingredient's name.
  */
 @Composable

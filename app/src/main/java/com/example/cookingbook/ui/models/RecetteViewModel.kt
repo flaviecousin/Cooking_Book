@@ -61,9 +61,10 @@ class RecetteViewModel(private val repository: RecetteRepository) : ViewModel() 
     }
 
     /**
-     * Permanently deletes [recette] via [RecetteRepository.delete]. There is no undo (the
-     * confirmation step lives in the UI layer (see the delete [androidx.compose.material3.AlertDialog]
-     * in 'RecipeScreen.kt'), not here).
+     * Permanently deletes [recette] via [RecetteRepository.delete], and cleans up its associated photo
+     * file (see [deleteInternalImage]) so deleting a recipe doesn't leave an orphaned image in internal
+     * storage. There is no undo (the confirmation step lives in the UI layer (see the delete
+     * [androidx.compose.material3.AlertDialog] in 'RecipeScreen.kt'), not here).
      *
      * @param recette the recipe to delete
      * @param onSuccess invoked after a successful delete; callers typically use this to navigate
