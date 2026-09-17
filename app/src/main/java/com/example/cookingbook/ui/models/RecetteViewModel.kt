@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cookingbook.ui.data.Recette
 import com.example.cookingbook.ui.data.RecetteRepository
+import com.example.cookingbook.ui.data.deleteInternalImage
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -74,6 +75,7 @@ class RecetteViewModel(private val repository: RecetteRepository) : ViewModel() 
         viewModelScope.launch {
             try{
                 repository.delete(recette)
+                deleteInternalImage(recette.image)
                 onSuccess()
             }
             catch (e: Exception){

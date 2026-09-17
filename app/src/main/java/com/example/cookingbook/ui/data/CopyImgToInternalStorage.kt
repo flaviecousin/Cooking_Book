@@ -42,3 +42,19 @@ fun copyImageToInternalStorage(context: Context, uri: Uri): String? {
         null
     }
 }
+
+/**
+ * Deletes the internal-storage image file at [path], if any. Safe to call with a blank path (does
+ * nothing) or a path that no longer exists on disk.
+ *
+ * @param path the internal-storage file path to delete, typically a [Recette.image] value.
+ */
+fun deleteInternalImage(path: String){
+    if (path.isBlank()) return
+    try {
+        File(path).delete()
+    }
+    catch (e: Exception){
+        e.printStackTrace()
+    }
+}

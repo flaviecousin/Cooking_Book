@@ -30,6 +30,7 @@ import com.example.cookingbook.ui.icons.FeatherCamera
 import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.Spacing
 import androidx.core.net.toUri
+import com.example.cookingbook.ui.data.deleteInternalImage
 
 /**
  * Photo picker button used in [com.example.cookingbook.ui.screens.AddScreen] to attach a photo to a
@@ -55,6 +56,9 @@ fun WidgetImg(value: String, onValueChange: (String) -> Unit){
         if (uri != null){
             val savedPath = copyImageToInternalStorage(context, uri)
             if (savedPath != null){
+                if (value.isNotBlank() && value != savedPath){
+                    deleteInternalImage(value)
+                }
                 onValueChange(savedPath)
             }
         }
