@@ -89,6 +89,8 @@ The visual identity leans towards editorial and warm: cream backgrounds, deep au
 - Creation of a new screen: integrated shopping list. Add an icon on each recipe to add all of its ingredients to a groceries list. The list screen show the consolidated ingredients (checkable one by one while shopping) plus, at the bottom, the recipes that contributed to it (with the option to remove a recipe (and its ingredients) from the list).
 - Adding a feature in the AddScreen where you can add a picture to
 - Auto-fill from picture/PDF/URL: let users import a recipe from a photo, a PDF, or an URL, and automatically extract and fill in the title, ingredients, steps, and other fields instead of typing theme manually.
+- Language selection (at least French and English, possibly more)
+- Ingredient scaling: automatically recalculate ingredient quantities based on the selected number of servings (in the RecipeScreen.kt) (quantities and units will need to be separated)
 
 
 ## 📜 License
