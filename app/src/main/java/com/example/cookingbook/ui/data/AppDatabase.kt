@@ -17,7 +17,7 @@ import androidx.room.TypeConverters
  * acceptable for a single-version, no-backend app, but worth revisiting if a schema migration is
  * ever needed.
  */
-@Database(entities = [Recette::class], version = 1, exportSchema = false)
+@Database(entities = [Recette::class], version = 1, exportSchema = true)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase(){
 

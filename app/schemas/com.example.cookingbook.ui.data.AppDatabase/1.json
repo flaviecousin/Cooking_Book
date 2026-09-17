@@ -1,0 +1,91 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "84ca0dc122f24cdc3d6eed1fc6a22c74",
+    "entities": [
+      {
+        "tableName": "recettes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `image` TEXT NOT NULL, `titre` TEXT NOT NULL, `categorie` TEXT NOT NULL, `people` INTEGER NOT NULL, `tempsPreparation` INTEGER NOT NULL, `tempsCuisson` INTEGER NOT NULL, `tempsRepos` INTEGER NOT NULL, `ingredients` TEXT NOT NULL, `instructions` TEXT NOT NULL, `conseils` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "image",
+            "columnName": "image",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titre",
+            "columnName": "titre",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "categorie",
+            "columnName": "categorie",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "people",
+            "columnName": "people",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tempsPreparation",
+            "columnName": "tempsPreparation",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tempsCuisson",
+            "columnName": "tempsCuisson",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tempsRepos",
+            "columnName": "tempsRepos",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ingredients",
+            "columnName": "ingredients",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "instructions",
+            "columnName": "instructions",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "conseils",
+            "columnName": "conseils",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '84ca0dc122f24cdc3d6eed1fc6a22c74')"
+    ]
+  }
+}
