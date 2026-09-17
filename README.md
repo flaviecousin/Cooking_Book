@@ -85,7 +85,11 @@ The visual identity leans towards editorial and warm: cream backgrounds, deep au
 
 ## 🔭 Future improvements
 - Using Hilt with Room instead of manual dependency injection
-- Room's [exportSchema = false] in [AppDatabase.kt] means no migration path is set up yet if the schema needs to change later
+- Creating the category inside the app and not in the code
+- Creation of a new screen: integrated shopping list. Add an icon on each recipe to add all of its ingredients to a groceries list. The list screen show the consolidated ingredients (checkable one by one while shopping) plus, at the bottom, the recipes that contributed to it (with the option to remove a recipe (and its ingredients) from the list).
+- Adding a feature in the AddScreen where you can add a picture to
+- Auto-fill from picture/PDF/URL: let users import a recipe from a photo, a PDF, or an URL, and automatically extract and fill in the title, ingredients, steps, and other fields instead of typing theme manually.
+
 
 ## 📜 License
 This code in this repository is licensed under multiple licenses. Feel free to use it as a reference, but please don't republish it as your own portfolio piece.
