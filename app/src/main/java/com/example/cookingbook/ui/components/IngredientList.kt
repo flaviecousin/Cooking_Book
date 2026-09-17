@@ -45,7 +45,7 @@ fun IngredientsList(ingredients: List<Ingredient>){
  * concatenated directly with no extra space inserted). This lets a recipe author work around awkward
  * spacing for quantities that don't read naturally with a space before the ingredient name (e.g. a
  * quantity as '"Un peu de "' produces '"Un peu de farine"' rather than '"Un peu de  farine"' with a
- * double space).
+ * double space) unless there is no quantity.
  *
  * @param quantite the ingredient's quantity as free text.
  * @param nourriture the ingredient's name.
@@ -59,21 +59,16 @@ fun LineIngredient(quantite: String, nourriture: String){
     ){
         Icon(imageVector = BootstrapDot, contentDescription = "Icône point", tint = MaterialTheme.colorScheme.primary)
         Spacer(Modifier.width(Spacing.md))
-        // Avoid a double space when the quantity string already ends with one
-        if (quantite.lastOrNull() == ' '){
-            Text(
-                text = quantite + nourriture,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground
-            )
+        val texteAffiche = when{
+            quantite.isBlank() -> nourriture
+            quantite.last() == ' ' -> quantite + nourriture
+            else -> "$quantite $nourriture"
         }
-        else{
-            Text(
-                text = "$quantite $nourriture",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        }
+        Text(
+            text = texteAffiche,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onBackground
+        )
     }
     HorizontalDivider(thickness = (0.5).dp, color = MaterialTheme.colorScheme.surface)
 }
