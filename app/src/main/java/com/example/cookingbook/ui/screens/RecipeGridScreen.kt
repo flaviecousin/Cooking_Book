@@ -36,6 +36,7 @@ import com.example.cookingbook.ui.components.IngredientsButton
 import com.example.cookingbook.ui.components.IngredientsFilterWindow
 import com.example.cookingbook.ui.components.RecipeCard
 import com.example.cookingbook.ui.components.SearchBar
+import com.example.cookingbook.ui.data.Categorie
 import com.example.cookingbook.ui.data.Recette
 import com.example.cookingbook.ui.models.RecetteViewModel
 import com.example.cookingbook.ui.theme.Spacing
@@ -78,7 +79,7 @@ private fun normalizeIngredientKey(name: String): String{
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeGridScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) -> Unit){
-    var categorySelected by remember{ mutableStateOf("Tout") }
+    var categorySelected by remember{ mutableStateOf(Categorie.TOUT.label) }
     var selectedIngredients by remember { mutableStateOf(setOf<String>()) }
     var showIngredientFilter by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
@@ -87,12 +88,14 @@ fun RecipeGridScreen(viewModel: RecetteViewModel, onRecipeClick: (Recette) -> Un
     // Dynamic, deduplicated (case-insensitive) list of every ingredient in use
     val availableIngredients = remember(recettes){
         recettes
+            .asSequence()
             .flatMap { it.ingredients }
             .map { it.ingredient.trim() }
             .filter { it.isNotBlank() }
             .groupBy { normalizeIngredientKey(it) }
             .map { (_, variantes) -> variantes.minBy { it.length } }
             .sortedBy { it.lowercase() }
+            .toList()
     }
     // If a selected ingredient disappears (recipe edited/deleted), clean up the selection
     LaunchedEffect(availableIngredients) {
@@ -191,23 +194,22 @@ fun Title(selectedIngredientsCount: Int, onFilterClick: () -> Unit, modifier: Mo
 }
 
 /**
- * Horizontally scrollable row of category chips to filter the recipe grid. The category list is
- * currently hardcoded here rather than shared with [com.example.cookingbook.ui.components.InputCategories]
- * 'categories' list.
+ * Horizontally scrollable row of category chips to filter the recipe grid. Built from [Categorie.entries]
+ * (including [Categorie.TOUT] as the "no filter" option), shared with 'InputCategories.kt''s dropdown
+ * so the 2 lists can no longer drift apart.
  *
  * @param categorySelected the currently active category.
- * @param onCategorySelected invoked with the tapped category's label.
+ * @param onCategorySelected invoked with the tapped category's [Categorie.label].
  */
 @Composable
 fun CategoryList(categorySelected: String, onCategorySelected: (String) -> Unit){
-    val categories = listOf("Tout", "Entrées", "Plats", "Desserts", "Pains", "Boissons", "A tester","Pas chères et faciles", "BBQ", "Noël/Festif")
     Row(modifier = Modifier.horizontalScroll(rememberScrollState()))
     {
-        categories.forEach { categorie ->
+        Categorie.entries.forEach { categorie ->
             ChipCategory(
-                texte = categorie,
-                isSelected = categorie == categorySelected,
-                onClick = {onCategorySelected (categorie)}
+                texte = categorie.label,
+                isSelected = categorie.label == categorySelected,
+                onClick = {onCategorySelected (categorie.label)}
 
             )
         }
@@ -234,7 +236,7 @@ fun ListeRecettesScreen(
 ){
     val recettes by viewModel.recettes.collectAsState()
     val recettesFiltrees = recettes
-        .filter { categorySelected == "Tout" || it.categorie == categorySelected}
+        .filter { categorySelected == Categorie.TOUT.label || it.categorie == categorySelected}
         .filter { recette ->
             selectedIngredients.isEmpty() || selectedIngredients.all {selected ->
                 recette.ingredients.any{

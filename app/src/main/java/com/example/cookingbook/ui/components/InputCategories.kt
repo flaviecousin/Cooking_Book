@@ -21,30 +21,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import com.example.cookingbook.ui.data.DropdownItem
+import com.example.cookingbook.ui.data.Categorie
 import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.Spacing
-
-/**
- * Category options offered in the add/edit recipe form's dropdown. Kept in sync by hand with
- * 'CategoryList''s hardcoded list in 'RecipeGridScreen.kt'. Both currently list the same 10 categories
- * (including "Tout" here as a selectable value, even though it's only meaningful as a grid filter,
- * not as an actual recipe category). Since neither list derives from the other, they can drift apart
- * again if one is edited without the other; extracting a single shared source of truth would remove
- * that risk.
- */
-val categories = listOf(
-    DropdownItem("Tout"),
-    DropdownItem("Entrées"),
-    DropdownItem("Plats"),
-    DropdownItem("Desserts"),
-    DropdownItem("Pains"),
-    DropdownItem("Boissons"),
-    DropdownItem("A tester"),
-    DropdownItem("Pas chères et faciles"),
-    DropdownItem("BBQ"),
-    DropdownItem("Noël/Festif")
-)
 
 /**
  * Read-only dropdown field for picking a recipe's category, used in the add/edit form. Implemented
@@ -52,9 +31,12 @@ val categories = listOf(
  * current selection and opens the menu on tap; direct typing is disable ('readOnly = true', empty
  * 'onValueChange').
  *
+ * Category options come from [Categorie.recipeCategories], shared with 'RecipeGridScreen.kt''s
+ * category filter chips so both stay in sync automatically.
+ *
  * @param value the currently selected category label.
- * @param onValueChange invoked with the newly selected category's title when an item from [categories]
- * is tapped.
+ * @param onValueChange invoked with the newly selected category's [Categorie.label] when an item is
+ * tapped.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -104,14 +86,14 @@ fun InputCategories(modifier: Modifier = Modifier, value: String, onValueChange:
                 onDismissRequest = { expanded = false },
                 shape = RoundedCornerShape(Radius.md)
             ) {
-                categories.forEachIndexed { index, item ->
+                Categorie.recipeCategories.forEach { categorie ->
                     DropdownMenuItem(
                         text = { Text(
-                            text=item.title,
+                            text=categorie.label,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurface) },
                         onClick = {
-                            onValueChange(item.title)
+                            onValueChange(categorie.label)
                             expanded = false
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
