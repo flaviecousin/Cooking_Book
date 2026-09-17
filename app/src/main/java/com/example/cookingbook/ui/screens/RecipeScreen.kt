@@ -387,8 +387,8 @@ fun RecipeScreen(
                             val bitmap = graphicsLayer.toImageBitmap()
                             try{
                                 when (action) {
-                                    ShareAction.SHARE -> shareRecipe(context, bitmap, fileName = titre.replace(" ", "_").replace("/","_").replace(" : ","-"), format)
-                                    ShareAction.OPEN -> openRecipeFile(context, bitmap, fileName = titre.replace(" ", "_").replace("/","_").replace(" : ","-"), format)
+                                    ShareAction.SHARE -> shareRecipe(context, bitmap, fileName = sanitizeFileName(titre.replace(" ","_")), format)
+                                    ShareAction.OPEN -> openRecipeFile(context, bitmap, fileName = sanitizeFileName(titre.replace(" ","_")), format)
                                 }
                             }
                             catch (e: Throwable){
@@ -427,3 +427,5 @@ fun RecipeScreen(
         }
     }
 }
+
+private fun sanitizeFileName(name: String): String = name.replace(Regex("[\\\\/:*\"<>|]"), "_")

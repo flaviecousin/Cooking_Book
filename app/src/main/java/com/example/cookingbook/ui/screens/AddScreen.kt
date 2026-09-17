@@ -41,6 +41,7 @@ import com.example.cookingbook.ui.components.WidgetImg
 import com.example.cookingbook.ui.data.Ingredient
 import com.example.cookingbook.ui.data.Preparation
 import com.example.cookingbook.ui.data.Recette
+import com.example.cookingbook.ui.data.deleteInternalImage
 import com.example.cookingbook.ui.models.RecetteViewModel
 import com.example.cookingbook.ui.theme.Spacing
 import kotlinx.coroutines.launch
@@ -126,6 +127,10 @@ fun AddScreen(
                                     viewModel.modifierRecette(
                                         cleanedRecipe,
                                         onSuccess = {
+                                            val oldImage = recetteExistante?.image
+                                            if (!oldImage.isNullOrBlank() && oldImage != cleanedRecipe.image){
+                                                deleteInternalImage(oldImage)
+                                            }
                                             coroutineScope.launch {
                                                 snackbarHostState.showSnackbar("La recette a bien été modifiée !")
                                             }

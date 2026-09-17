@@ -23,14 +23,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.cookingbook.ui.data.copyImageToInternalStorage
 import com.example.cookingbook.ui.icons.FeatherCamera
 import com.example.cookingbook.ui.theme.Radius
 import com.example.cookingbook.ui.theme.Spacing
-import androidx.core.net.toUri
-import com.example.cookingbook.ui.data.deleteInternalImage
 
 /**
  * Photo picker button used in [com.example.cookingbook.ui.screens.AddScreen] to attach a photo to a
@@ -53,19 +52,10 @@ fun WidgetImg(value: String, onValueChange: (String) -> Unit){
     val context = LocalContext.current
     val displayUri: Uri? = if (value.isNotEmpty()) value.toUri() else null
 
-    /*
-    Deletes the previously stored image (if any) once a newly picked image has been successfully copied
-    to internal storage, so switching photos doesn't leave the old file orphaned on the disk. The
-    check against 'savedPath' guards against deleting the very file that was just created, in the
-    unlikely case the picker/copy logic ever reused the same path.
-     */
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null){
             val savedPath = copyImageToInternalStorage(context, uri)
             if (savedPath != null){
-                if (value.isNotBlank() && value != savedPath){
-                    deleteInternalImage(value)
-                }
                 onValueChange(savedPath)
             }
         }

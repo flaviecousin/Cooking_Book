@@ -106,7 +106,7 @@ class RecetteViewModel(private val repository: RecetteRepository) : ViewModel() 
             }
             catch (e: Exception){
                 e.printStackTrace()
-                onError("Impossible de modifier la recette, veuillez réssayer.")
+                onError("Impossible de modifier la recette, veuillez réessayer.")
             }
         }
     }
