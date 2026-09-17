@@ -58,7 +58,8 @@ flowchart LR;
 ui/
   |---- components/ # Reusable composables (cards, inputs, buttons, dialogs, ...)
   |---- data/ # Room entities, DAO, repository, converters
-  |---- icons/ # IamgeVector icon definitions
+  |---- fonts_assets/ # Files for the license and the readme file for one of the font used in the project (DSE Typewriter)
+  |---- icons/ # ImageVector icon definitions
   |---- models/ # ViewModels
   |---- screens/ # Top-level screens (grid, detail, add/edit)
   |---- theme/ # Design tokens: colors, spacing, radius, typography
