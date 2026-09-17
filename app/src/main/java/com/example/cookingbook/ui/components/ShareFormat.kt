@@ -85,6 +85,7 @@ fun openRecipeFile(context: Context, bitmap: ImageBitmap, fileName: String, form
 private fun saveAsImage(context: Context, bitmap: Bitmap, fileName: String): File{
     val bitmapWithBackground = applyWarmCreamBackground((bitmap))
     val dir = File(context.cacheDir, "images").apply { mkdirs() }
+    clearCacheDir(dir)
     val file = File(dir, "$fileName.png")
     FileOutputStream(file).use{out ->
         bitmapWithBackground.compress(Bitmap.CompressFormat.PNG, 100,out)
@@ -115,6 +116,7 @@ private fun saveAsPdf(context: Context, bitmap: Bitmap, fileName: String): File{
     document.finishPage(page)
 
     val dir = File(context.cacheDir, "pdfs").apply { mkdirs() }
+    clearCacheDir(dir)
     val file = File(dir, "$fileName.pdf")
     FileOutputStream(file).use {out -> document.writeTo(out)}
     document.close()
@@ -144,5 +146,15 @@ private fun applyWarmCreamBackground(bitmap: Bitmap): Bitmap{
         val canvas = android.graphics.Canvas(this)
         canvas.drawColor(backgroundColor)
         canvas.drawBitmap(softwareBitmap, 0f, 0f, null)
+    }
+}
+
+/**
+ * Deletes every file currently in [dir], if it exists. Used to prevent [saveAsImage] and [saveAsPdf]
+ * from silently accumulating orphaned exports across multiple shares of different recipes.
+ */
+private fun clearCacheDir (dir: File){
+    if (dir.exists()){
+        dir.listFiles()?.forEach { it.delete() }
     }
 }
