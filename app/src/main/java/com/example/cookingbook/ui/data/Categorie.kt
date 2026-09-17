@@ -27,7 +27,7 @@ enum class Categorie(val label: String) {
     PAINS("Pains"),
     BOISSONS("Boissons"),
     A_TESTER("A tester"),
-    PAS_CHERES("Pas chères et faciles"),
+    PAS_CHERES("Pas chères & faciles"),
     BBQ("BBQ"),
     NOEL("Noël/Festif");
 

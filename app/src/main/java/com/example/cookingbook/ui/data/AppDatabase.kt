@@ -12,10 +12,6 @@ import androidx.room.TypeConverters
  *
  * Accessed exclusively through the thread-safe singleton [getDatabase] (there is no public constructor,
  * so all callers share the same underlying SQLite connection).
- *
- * 'exportSchema = false' means no schema history is exported to a JSON file for migration tooling;
- * acceptable for a single-version, no-backend app, but worth revisiting if a schema migration is
- * ever needed.
  */
 @Database(entities = [Recette::class], version = 1, exportSchema = true)
 @TypeConverters(Converters::class)

@@ -58,10 +58,19 @@ fun TotalTimeCard(tempsPrep: Int, tempsCuisson: Int, tempsRepos: Int){
             if (total >= 60){
                 val heure = total/60
                 val minutes = total - (heure * 60)
-                Text(
-                    text = heure.toString() + "h" + minutes.toString() + "min",
-                    style = MaterialTheme.typography.bodySmall
-                )
+                if (minutes<10){
+                    val minutesZeroPadded = "0$minutes"
+                    Text(
+                        text = heure.toString() + "h " + minutesZeroPadded + " min",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+                else {
+                    Text(
+                        text = heure.toString() + "h " + minutes.toString() + " min",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
             }
             else {
                 Text(
