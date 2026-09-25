@@ -92,6 +92,8 @@ The visual identity leans towards editorial and warm: cream backgrounds, deep au
 - Auto-fill from picture/PDF/URL: let users import a recipe from a photo, a PDF, or an URL, and automatically extract and fill in the title, ingredients, steps, and other fields instead of typing theme manually.
 - Language selection (at least French and English, possibly more)
 - Ingredient scaling: automatically recalculate ingredient quantities based on the selected number of servings (in the RecipeScreen.kt) (quantities and units will need to be separated)
+- When creating the PDF or picture, if they're too big for the standard dimensions (A4 or 10x15 cm), they have to create multiple pictures or pages of the PDF.
+- Possibility to add multiple pictures of the recipe
 
 
 ## 📜 License
