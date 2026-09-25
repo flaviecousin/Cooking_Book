@@ -12,6 +12,17 @@ The visual reference was created on Emergent and used a React Native/Expo mockup
 ![Room](https://img.shields.io/badge/Room-4285F4?style=for-the-badge)
 
 ## 📖 Preview
+<img height="500" alt="RecipeGridScreen" src="https://github.com/user-attachments/assets/fb51912f-4459-4c8b-955f-c65337cf7c08" />
+<img height="500" alt="RecipeGridScreen_ingredient" src="https://github.com/user-attachments/assets/ecf64fd3-cbf0-4485-8b3f-7091d7801eec" />
+<img height="500" alt="RecipeGridScreen_category" src="https://github.com/user-attachments/assets/44fde316-9d1e-4dec-ab04-8e1c21fc7bee" />
+<img height="500" alt="AddScreen1" src="https://github.com/user-attachments/assets/dd584679-1fa0-4022-a074-426f6b37e8d6" />
+<img height="500" alt="AddScreen2" src="https://github.com/user-attachments/assets/94f25470-55b3-49c8-84a8-af1e21736231" />
+<img height="500" alt="AddScreen3" src="https://github.com/user-attachments/assets/5f52aa1a-b38a-4f36-8390-9737cfa0bc7c" />
+<img height="500" alt="RecipeScreen1" src="https://github.com/user-attachments/assets/6cca9140-da86-4da9-b940-0768cc8211c0" />
+<img height="500" alt="RecipeScreen2" src="https://github.com/user-attachments/assets/9e17a8d6-6838-4592-94b7-43c229146467" />
+<img height="500" alt="RecipeScreen3" src="https://github.com/user-attachments/assets/49bca7e3-c4e3-402a-8d30-2229144b18e6" />
+<img height="500" alt="RecipeScreen4" src="https://github.com/user-attachments/assets/ca48a427-dee3-4eba-861f-f50c9bcdfce1" />
+
 ## 🧩 Features
 - **Recipe grid:** browse all your recipes in a 2-column grid, with photo, category, total time, and servings at a glance.
 - **Search:** instant title search with an inline results dropdown.
