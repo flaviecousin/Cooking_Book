@@ -56,7 +56,6 @@ import com.example.cookingbook.ui.theme.Spacing
  */
 @Composable
 fun RecipeCard (titre: String, categorie: String, tempsPrep: Int, tempsCuisson: Int, tempsRepos:Int, nbPers: Int, img: String, onClick: () -> Unit){
-    val tempsTotal = tempsCuisson + tempsPrep + tempsRepos
     val aUneImage = img.isNotEmpty()
     Button(
         onClick = onClick,
@@ -112,11 +111,7 @@ fun RecipeCard (titre: String, categorie: String, tempsPrep: Int, tempsCuisson: 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(imageVector = LucideClock, contentDescription = "Icône de temps", modifier = Modifier.size(13.dp), tint = BrownCream)
                     Spacer(modifier = Modifier.width(5.dp))
-                    Text(
-                        text = "$tempsTotal min",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = RosyPowdered
-                    )
+                    CalculTime(tempsCuisson + tempsPrep + tempsRepos)
                     Icon(imageVector = BootstrapDot, contentDescription = "Point", modifier = Modifier.size(12.dp))
                     // Displays the number of servings
                     Icon(imageVector = RadixPeople, contentDescription = "Nombre de personnes", modifier = Modifier.size(13.dp), tint = BrownCream)
@@ -129,5 +124,35 @@ fun RecipeCard (titre: String, categorie: String, tempsPrep: Int, tempsCuisson: 
                 }
             }
         }
+    }
+}
+
+@Composable
+fun CalculTime (tempsTot: Int){
+    if (tempsTot >= 60){
+        val heure = tempsTot/60
+        val minutes = tempsTot - (heure * 60)
+        if (minutes<10){
+            val minutesZeroPadded = "0$minutes"
+            Text(
+                text = heure.toString() + "h " + minutesZeroPadded + " min",
+                style = MaterialTheme.typography.labelSmall,
+                color = RosyPowdered
+            )
+        }
+        else {
+            Text(
+                text = heure.toString() + "h " + minutes.toString() + " min",
+                style = MaterialTheme.typography.labelSmall,
+                color = RosyPowdered
+            )
+        }
+    }
+    else {
+        Text(
+            text = "$tempsTot min",
+            style = MaterialTheme.typography.labelSmall,
+            color = RosyPowdered
+        )
     }
 }
