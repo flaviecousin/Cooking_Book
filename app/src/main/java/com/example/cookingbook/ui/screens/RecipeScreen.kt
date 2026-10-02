@@ -230,22 +230,24 @@ private fun RecipeContent(
     Spacer(modifier = Modifier.height(Spacing.sm))
     StepsList(preparation = preparation)
     Spacer(modifier = Modifier.height(Spacing.sm))
-    HorizontalDivider(
-        thickness = 2.dp,
-        color = MaterialTheme.colorScheme.surface,
-        modifier = Modifier.padding(Spacing.sm)
-    )
 
     // ------ ADVICES & NOTES ------
-    Text(
-        text = "Conseils & avis".uppercase(),
-        style = MaterialTheme.typography.labelLarge,
-        color = MaterialTheme.colorScheme.onPrimaryContainer,
-        modifier = Modifier.padding(Spacing.sm)
-    )
-    Spacer(modifier = Modifier.height(Spacing.sm))
-    AdviceCard(advices = conseils)
-    Spacer(modifier = Modifier.height(Spacing.lg))
+    if (conseils.isNotEmpty()){
+        HorizontalDivider(
+            thickness = 2.dp,
+            color = MaterialTheme.colorScheme.surface,
+            modifier = Modifier.padding(Spacing.sm)
+        )
+        Text(
+            text = "Conseils & avis".uppercase(),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            modifier = Modifier.padding(Spacing.sm)
+        )
+        Spacer(modifier = Modifier.height(Spacing.sm))
+        AdviceCard(advices = conseils)
+        Spacer(modifier = Modifier.height(Spacing.lg))
+    }
 }
 
 /**
