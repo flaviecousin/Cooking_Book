@@ -96,14 +96,19 @@ The visual identity leans towards editorial and warm: cream backgrounds, deep au
 - Fonts: *Playfair Display* and *DSE Typewriter* (check each fonts's license before any commercial use.
 
 ## 🔭 Future improvements
-- Using Hilt with Room instead of manual dependency injection
-- Creating the category inside the app and not in the code
+- Using Hilt with Room instead of manual dependency injection.
+- Creating the category inside the app and not in the code.
 - Creation of a new screen: integrated shopping list. Add an icon on each recipe to add all of its ingredients to a groceries list. The list screen show the consolidated ingredients (checkable one by one while shopping) plus, at the bottom, the recipes that contributed to it (with the option to remove a recipe (and its ingredients) from the list).
 - Auto-fill from picture/PDF/URL: let users import a recipe from a photo, a PDF, or an URL, and automatically extract and fill in the title, ingredients, steps, and other fields instead of typing theme manually.
-- Language selection (at least French and English, possibly more)
-- Ingredient scaling: automatically recalculate ingredient quantities based on the selected number of servings (in the RecipeScreen.kt) (quantities and units will need to be separated)
+- Language selection (at least French and English, possibly more).
+- Ingredient scaling: automatically recalculate ingredient quantities based on the selected number of servings (in the RecipeScreen.kt) (quantities and units will need to be separated).
 - When creating the PDF or picture, if they're too big for the standard dimensions (A4 or 10x15 cm), they have to create multiple pictures or pages of the PDF.
-- Possibility to add multiple pictures of the recipe
+- Possibility to add multiple pictures of the recipe.
+- Change the search bar so that it only appears when a button is tapped.
+- Hide the top bar when scrolling on the grid?
+- Add a dark theme.
+- Handle links and bullet points in the "CONSEILS & AVIS" section
+- Add a user screen (to chose light/dark theme, language and to add/edit categories but no deletion)
 
 
 ## 📜 License
